@@ -1,6 +1,6 @@
 {
   "name": "simple-app",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "private": true,
   "dependencies": {
     "react": "^16.7.0",
