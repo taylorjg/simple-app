@@ -1,10 +1,14 @@
 const path = require('path')
 const express = require('express')
+const weatherInfoApi = require('./api/weatherInfo')
 
-const port = process.env.PORT || 3001
+const PORT = process.env.PORT || 3001
+const OPEN_WEATHER_API_KEY = process.env.OPEN_WEATHER_API_KEY
+
 const publicFolder = path.join(__dirname, 'public')
 
 const app = express()
 app.use('/', express.static(publicFolder))
+app.use('/api/weatherInfo', weatherInfoApi.buildRouter(OPEN_WEATHER_API_KEY))
 
-app.listen(port, () => console.log(`Listening on port ${port}`))
+app.listen(PORT, () => console.log(`Listening on port ${PORT}`))
