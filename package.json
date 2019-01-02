@@ -1,6 +1,6 @@
 {
   "name": "simple-app",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "private": true,
   "dependencies": {
     "axios": "^0.18.0",
@@ -13,7 +13,12 @@
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "heroku-postbuild": "npm run build && mv build server/public"
+    "start-dev": "npm run start-node | npm start",
+    "start-local": "npm run clean-server-public; npm run build && npm run copy-to-server-public && npm run start-node",
+    "start-node": "source ./env.sh; node ./server",
+    "clean-server-public": "rm -rf ./server/public",
+    "copy-to-server-public": "cp -r ./build ./server/public",
+    "heroku-postbuild": "npm run build && npm run copy-to-server-public"
   },
   "eslintConfig": {
     "extends": "react-app"
