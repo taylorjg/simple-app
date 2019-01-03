@@ -1,29 +1,21 @@
 import React, { Component } from 'react'
-import logo from './logo.svg'
-import './App.css'
+import { WeatherView } from './components/WeatherView'
 import { version } from '../package.json'
+import './App.css'
 
 class App extends Component {
   render() {
     return (
-      <div className="App">
-        <header className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <p>
-            Edit <code>src/App.js</code> and save to reload.
-          </p>
-          <a
-            className="App-link"
-            href="https://reactjs.org"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Learn React
-          </a>
-          <p>
-            <small><i>(version: {version})</i></small>
-          </p>
-        </header>
+      <div className="container">
+        <div className="row">
+          <span className="version pull-right">(version: {version})</span>
+          <hr />
+        </div>
+        <div className="row">
+          <main>
+            <WeatherView />
+          </main>
+        </div>
       </div>
     )
   }
