@@ -5,8 +5,7 @@ import './WeatherInfo.css'
 export const WeatherInfo = props =>
   <div className="weatherInfo">
     <ul>
-      <li>Country: {props.country}</li>
-      <li>City: {props.city}</li>
+      <li>Location: {`${props.city}, ${props.country}`}</li>
       <li>Description: {props.description}</li>
       <li>Temp {props.temp}</li>
       <li>Min Temp: {props.tempMin}</li>

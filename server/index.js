@@ -9,6 +9,6 @@ const publicFolder = path.join(__dirname, 'public')
 
 const app = express()
 app.use('/', express.static(publicFolder))
-app.use('/api/weatherInfo', weatherInfoApi.buildRouter(OPEN_WEATHER_API_KEY))
+app.use('/api', weatherInfoApi.buildRouter(OPEN_WEATHER_API_KEY))
 
 app.listen(PORT, () => console.log(`Listening on port ${PORT}`))

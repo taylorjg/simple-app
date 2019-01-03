@@ -1,28 +1,41 @@
 import React, { Component } from 'react'
 import { WeatherInfo } from './WeatherInfo'
-import { getWeatherInfo } from '../services/weatherInfo'
+import { getWeatherInfoMultiple } from '../services/weatherInfo'
 import './WeatherView.css'
 
 export class WeatherView extends Component {
 
   constructor() {
     super()
-    this.location = {
-      country: 'UK',
-      city: 'Manchester'
-    }
+    this.locations = [
+      {
+        country: 'GB',
+        city: 'Manchester',
+        id: 2643123
+      },
+      {
+        country: 'GB',
+        city: 'Edinburgh',
+        id: 2650225
+      },
+      {
+        country: 'GB',
+        city: 'London',
+        id: 2643743
+      },
+    ]
     this.state = {
-      weatherInfo: null
+      weatherInfos: null
     }
   }
 
   async componentDidMount() {
     try {
-      const weatherInfo = await getWeatherInfo(this.location.country, this.location.city)
-      this.setState({ weatherInfo })
+      const data = await getWeatherInfoMultiple(this.locations.map(l => l.id))
+      this.setState({ weatherInfos: data.list })
     } catch (error) {
       console.error(`[WeatherView#componentDidMount] error: ${error}`)
-      // TODO: error handling
+      // TODO: better error handling
     }
   }
 
@@ -33,15 +46,17 @@ export class WeatherView extends Component {
   render() {
     return <div className="weatherView">
       {
-        this.state.weatherInfo
-          ? <WeatherInfo
-            country={this.state.weatherInfo.sys.country}
-            city={this.state.weatherInfo.name}
-            description={this.state.weatherInfo.weather[0].description}
-            temp={this.state.weatherInfo.main.temp}
-            tempMin={this.state.weatherInfo.main.temp_min}
-            tempMax={this.state.weatherInfo.main.temp_max}
-          />
+        this.state.weatherInfos
+          ? this.state.weatherInfos.map(weatherInfo =>
+            <WeatherInfo
+              key={weatherInfo.id}
+              country={weatherInfo.sys.country}
+              city={weatherInfo.name}
+              description={weatherInfo.weather[0].description}
+              temp={weatherInfo.main.temp}
+              tempMin={weatherInfo.main.temp_min}
+              tempMax={weatherInfo.main.temp_max}
+            />)
           : <div>Loading...</div>
       }
     </div>
