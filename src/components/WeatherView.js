@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { WeatherInfo } from './WeatherInfo'
-import { getWeatherInfoMultiple } from '../services/weatherInfo'
+import { getWeatherInfo } from '../services/weatherInfo'
 import './WeatherView.css'
 
 export class WeatherView extends Component {
@@ -36,7 +36,7 @@ export class WeatherView extends Component {
 
   async componentDidMount() {
     try {
-      const data = await getWeatherInfoMultiple(this.locations.map(l => l.id))
+      const data = await getWeatherInfo(this.locations.map(l => l.id))
       this.setState({ weatherInfos: data.list })
     } catch (error) {
       console.error(`[WeatherView#componentDidMount] error: ${error}`)

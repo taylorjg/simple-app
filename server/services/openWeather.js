@@ -6,20 +6,7 @@ const configure = apiKey => {
     baseURL: 'https://api.openweathermap.org'
   })
 
-  const getWeatherInfo = async (country, city) => {
-    const url = `/data/2.5/weather`
-    const config = {
-      params: {
-        appid: apiKey,
-        q: `${city},${country}`,
-        units: 'metric'
-      }
-    }
-    const response = await axiosInstance.get(url, config)
-    return response.data
-  }
-
-  const getWeatherInfoMultiple = async ids => {
+  const getWeatherInfo = async ids => {
     const url = `/data/2.5/group`
     const config = {
       params: {
@@ -33,8 +20,7 @@ const configure = apiKey => {
   }
 
   return {
-    getWeatherInfo,
-    getWeatherInfoMultiple
+    getWeatherInfo
   }
 }
 
