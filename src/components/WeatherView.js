@@ -23,6 +23,11 @@ export class WeatherView extends Component {
         city: 'London',
         id: 2643743
       },
+      {
+        country: 'AU',
+        city: 'Sydney',
+        id: 2147714
+      }
     ]
     this.state = {
       weatherInfos: null
@@ -53,6 +58,7 @@ export class WeatherView extends Component {
               country={weatherInfo.sys.country}
               city={weatherInfo.name}
               description={weatherInfo.weather[0].description}
+              icon={weatherInfo.weather[0].icon}
               temp={weatherInfo.main.temp}
               tempMin={weatherInfo.main.temp_min}
               tempMax={weatherInfo.main.temp_max}
