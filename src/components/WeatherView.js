@@ -36,8 +36,8 @@ export class WeatherView extends Component {
 
   async componentDidMount() {
     try {
-      const data = await getWeatherInfo(this.locations.map(l => l.id))
-      this.setState({ weatherInfos: data.list })
+      const weatherInfos = await getWeatherInfo(this.locations.map(location => location.id))
+      this.setState({ weatherInfos })
     } catch (error) {
       console.error(`[WeatherView#componentDidMount] error: ${error}`)
       // TODO: better error handling
@@ -53,16 +53,7 @@ export class WeatherView extends Component {
       {
         this.state.weatherInfos
           ? this.state.weatherInfos.map(weatherInfo =>
-            <WeatherInfo
-              key={weatherInfo.id}
-              country={weatherInfo.sys.country}
-              city={weatherInfo.name}
-              description={weatherInfo.weather[0].description}
-              icon={weatherInfo.weather[0].icon}
-              temp={weatherInfo.main.temp}
-              tempMin={weatherInfo.main.temp_min}
-              tempMax={weatherInfo.main.temp_max}
-            />)
+            <WeatherInfo key={weatherInfo.id} {...weatherInfo} />)
           : <div>Loading...</div>
       }
     </div>
