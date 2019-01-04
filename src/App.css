@@ -6,3 +6,8 @@
   font-size: smaller;
   font-style: italic;
 }
+
+.header-row {
+  margin-left: 10px;
+  margin-right: 10px;
+}

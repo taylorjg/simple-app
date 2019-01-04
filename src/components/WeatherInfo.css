@@ -1,5 +1,11 @@
 .weatherInfo {
   background-color: aliceblue;
-  margin: 10px;
   padding: 10px;
+  margin: 10px;
+  flex: 1 0 0;
+}
+
+.weatherInfo ul {
+  list-style: none;
+  padding-left: 0;
 }

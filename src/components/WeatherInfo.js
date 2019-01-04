@@ -7,9 +7,9 @@ export const WeatherInfo = props =>
     <ul>
       <li>Location: {`${props.city}, ${props.country}`}</li>
       <li>Description: {props.description}</li>
-      <li>Temp {props.temp}</li>
-      <li>Min Temp: {props.tempMin}</li>
-      <li>Max Temp: {props.tempMax}</li>
+      <li>Current temperature: {props.temp} &deg;C</li>
+      <li>Minimum temperature: {props.tempMin} &deg;C</li>
+      <li>Maximum temperature: {props.tempMax} &deg;C</li>
       <img alt={props.icon} src={`http://openweathermap.org/img/w/${props.icon}.png`}></img>
     </ul>
   </div>

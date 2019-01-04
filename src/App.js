@@ -8,8 +8,12 @@ class App extends Component {
     return (
       <div className="container">
         <div className="row">
-          <span className="version pull-right">(version: {version})</span>
-          <hr />
+          <div className="header-row">
+            <span className="version pull-right">version: {version}</span>
+          </div>
+          <div className="header-row">
+            <hr />
+          </div>
         </div>
         <div className="row">
           <main>
