@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { ErrorPanel, formatAxiosError } from './ErrorPanel'
+import { ErrorPanel } from './ErrorPanel'
 import { WeatherInfo } from './WeatherInfo'
 import { getWeatherInfo } from '../services/weatherInfo'
 import './WeatherView.css'
@@ -50,17 +50,16 @@ export class WeatherView extends Component {
   }
 
   async getWeatherInfos() {
-    console.log(`[WeatherView#getWeatherInfos]`)
     try {
+      console.log(`[WeatherView#getWeatherInfos]`)
       this.setState({ busy: true })
       const weatherInfos = await getWeatherInfo(LOCATION_IDS)
       this.setState({ weatherInfos })
     } catch (error) {
-      console.error(`[WeatherView#getWeatherInfos] error: ${error}`)
-      console.dir(error)
+      console.error(`[WeatherView#getWeatherInfos] ${error.message}`)
       this.setState({
         weatherInfos: null,
-        errorMessage: formatAxiosError(error, 'An error occurred retrieving weather information')
+        errorMessage: error.message
       })
     } finally {
       setTimeout(() => {

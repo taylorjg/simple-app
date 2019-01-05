@@ -1,35 +1,74 @@
 const axios = require('axios')
 
-const configure = apiKey => {
+const configure = (apiKey, exposeErrorDetails) => {
 
   const axiosInstance = axios.create({
     baseURL: 'https://api.openweathermap.org'
   })
 
+  const BASE_PARAMS = {
+    appid: apiKey,
+    units: 'metric'
+  }
+
+  const getWeatherInfo = async ids => {
+    try {
+      const url = `/data/2.5/group`
+      const config = configWithAdditionalParams({
+        id: ids.join(',')
+      })
+      const response = await axiosInstance.get(url, config)
+      const openWeatherResults = response.data.list
+      return {
+        success: {
+          results: openWeatherResults.map(openWeatherResultToViewModelResult)
+        }
+      }
+    } catch (error) {
+      const [errorMessage, clientErrorMessage] = getOpenWeatherErrorMessage(error)
+      console.error(`[services.openWeather.getWeatherInfo] ${errorMessage}`)
+      return {
+        failure: {
+          errorMessage: clientErrorMessage
+        }
+      }
+    }
+  }
+
+  const openWeatherResultToViewModelResult = openWeatherResult => ({
+    id: openWeatherResult.id,
+    country: openWeatherResult.sys.country,
+    city: openWeatherResult.name,
+    description: openWeatherResult.weather[0].description,
+    imageUrl: makeImageUrl(openWeatherResult.weather[0].icon),
+    currentTemp: openWeatherResult.main.temp,
+    minTemp: openWeatherResult.main.temp_min,
+    maxTemp: openWeatherResult.main.temp_max
+  })
+
   const makeImageUrl = icon =>
     `https://openweathermap.org/img/w/${icon}.png`
 
-  const getWeatherInfo = async ids => {
-    const url = `/data/2.5/group`
-    const config = {
-      params: {
-        appid: apiKey,
-        id: ids.join(','),
-        units: 'metric'
-      }
+  const configWithAdditionalParams = params => ({
+    params: {
+      ...BASE_PARAMS,
+      ...params
     }
-    const response = await axiosInstance.get(url, config)
-    const viewModel = response.data.list.map(weatherInfo => ({
-      id: weatherInfo.id,
-      country: weatherInfo.sys.country,
-      city: weatherInfo.name,
-      description: weatherInfo.weather[0].description,
-      imageUrl: makeImageUrl(weatherInfo.weather[0].icon),
-      currentTemp: weatherInfo.main.temp,
-      minTemp: weatherInfo.main.temp_min,
-      maxTemp: weatherInfo.main.temp_max
-    }))
-    return viewModel
+  })
+
+  const getOpenWeatherErrorMessage = error => {
+    const baseMessage = 'A back end error occurred invoking the OpenWeather API'
+    const response = error.response
+    const detailedErrorMessage =
+      response && response.status && response.data && response.data.message
+        ? `${baseMessage} (${response.status} ${response.data.message}).`
+        : response && response.status && response.statusText
+          ? `${baseMessage} (${response.status} ${response.statusText}).`
+          : `${baseMessage} (${error.message}).`
+    const clientErrorMessage = exposeErrorDetails
+      ? detailedErrorMessage
+      : `${baseMessage}.`
+    return [detailedErrorMessage, clientErrorMessage]
   }
 
   return {
