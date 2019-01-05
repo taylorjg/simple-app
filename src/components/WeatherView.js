@@ -1,37 +1,42 @@
 import React, { Component } from 'react'
+import { ErrorPanel, formatAxiosError } from './ErrorPanel'
 import { WeatherInfo } from './WeatherInfo'
 import { getWeatherInfo } from '../services/weatherInfo'
 import './WeatherView.css'
+
+const LOCATIONS = [
+  {
+    country: 'GB',
+    city: 'Manchester',
+    id: 2643123
+  },
+  {
+    country: 'GB',
+    city: 'Edinburgh',
+    id: 2650225
+  },
+  {
+    country: 'GB',
+    city: 'London',
+    id: 2643743
+  },
+  {
+    country: 'AU',
+    city: 'Sydney',
+    id: 2147714
+  }
+]
+
+const LOCATION_IDS = LOCATIONS.map(location => location.id)
 
 export class WeatherView extends Component {
 
   constructor() {
     super()
-    this.locations = [
-      {
-        country: 'GB',
-        city: 'Manchester',
-        id: 2643123
-      },
-      {
-        country: 'GB',
-        city: 'Edinburgh',
-        id: 2650225
-      },
-      {
-        country: 'GB',
-        city: 'London',
-        id: 2643743
-      },
-      {
-        country: 'AU',
-        city: 'Sydney',
-        id: 2147714
-      }
-    ]
     this.state = {
       weatherInfos: null,
-      busy: false
+      busy: false,
+      errorMessage: null
     }
   }
 
@@ -48,11 +53,15 @@ export class WeatherView extends Component {
     console.log(`[WeatherView#getWeatherInfos]`)
     try {
       this.setState({ busy: true })
-      const weatherInfos = await getWeatherInfo(this.locations.map(location => location.id))
+      const weatherInfos = await getWeatherInfo(LOCATION_IDS)
       this.setState({ weatherInfos })
     } catch (error) {
       console.error(`[WeatherView#getWeatherInfos] error: ${error}`)
-      // TODO: better error handling
+      console.dir(error)
+      this.setState({
+        weatherInfos: null,
+        errorMessage: formatAxiosError(error, 'An error occurred retrieving weather information')
+      })
     } finally {
       setTimeout(() => {
         this.setState({ busy: false })
@@ -63,6 +72,10 @@ export class WeatherView extends Component {
   onRefresh() {
     console.log(`[WeatherView#onRefresh]`)
     this.getWeatherInfos()
+  }
+
+  clearErrorMessage() {
+    this.setState({ errorMessage: null })
   }
 
   renderWeatherInfos() {
@@ -85,6 +98,12 @@ export class WeatherView extends Component {
               <i className="fas fa-redo"></i>
             </span>
           </div>
+        </div>
+      </div>
+      <div className="row">
+        <div className="row-margins">
+          <ErrorPanel errorMessage={this.state.errorMessage}
+            onClose={() => this.clearErrorMessage()} />
         </div>
       </div>
       <div className="row">
