@@ -30,7 +30,8 @@ export class WeatherView extends Component {
       }
     ]
     this.state = {
-      weatherInfos: null
+      weatherInfos: null,
+      busy: false
     }
   }
 
@@ -46,11 +47,16 @@ export class WeatherView extends Component {
   async getWeatherInfos() {
     console.log(`[WeatherView#getWeatherInfos]`)
     try {
+      this.setState({ busy: true })
       const weatherInfos = await getWeatherInfo(this.locations.map(location => location.id))
       this.setState({ weatherInfos })
     } catch (error) {
       console.error(`[WeatherView#getWeatherInfos] error: ${error}`)
       // TODO: better error handling
+    } finally {
+      setTimeout(() => {
+        this.setState({ busy: false })
+      }, 250)
     }
   }
 
@@ -69,10 +75,16 @@ export class WeatherView extends Component {
     return <div>
       <div className="row">
         <div className="row-margins">
-          <span className="btn btn-xs btn-success pull-right" title="Refresh"
-            onClick={() => this.onRefresh()}>
-            <i className="fas fa-redo"></i>
-          </span>
+          <div className="pull-right">
+            {
+              this.state.busy &&
+              <img className="busy-indicator" alt="busy indicator" src="/spinner.gif" />
+            }
+            <span className="btn btn-xs btn-success" title="Refresh"
+              onClick={() => this.onRefresh()}>
+              <i className="fas fa-redo"></i>
+            </span>
+          </div>
         </div>
       </div>
       <div className="row">

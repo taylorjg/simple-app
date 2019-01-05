@@ -14,3 +14,7 @@
 .refresh-button {
   color: green;
 }
+
+.busy-indicator {
+  margin-right: 5px;
+}
