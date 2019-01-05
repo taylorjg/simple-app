@@ -34,28 +34,52 @@ export class WeatherView extends Component {
     }
   }
 
-  async componentDidMount() {
-    try {
-      const weatherInfos = await getWeatherInfo(this.locations.map(location => location.id))
-      this.setState({ weatherInfos })
-    } catch (error) {
-      console.error(`[WeatherView#componentDidMount] error: ${error}`)
-      // TODO: better error handling
-    }
+  componentDidMount() {
+    console.log(`[WeatherView#componentDidMount]`)
+    this.getWeatherInfos()
   }
 
   componentDidCatch(error, info) {
     console.error(`[WeatherView#componentDidCatch] error: ${error}; info: ${info}`)
   }
 
+  async getWeatherInfos() {
+    console.log(`[WeatherView#getWeatherInfos]`)
+    try {
+      const weatherInfos = await getWeatherInfo(this.locations.map(location => location.id))
+      this.setState({ weatherInfos })
+    } catch (error) {
+      console.error(`[WeatherView#getWeatherInfos] error: ${error}`)
+      // TODO: better error handling
+    }
+  }
+
+  onRefresh() {
+    console.log(`[WeatherView#onRefresh]`)
+    this.getWeatherInfos()
+  }
+
+  renderWeatherInfos() {
+    console.log(`[WeatherView#renderWeatherInfos]`)
+    return this.state.weatherInfos.map(weatherInfo =>
+      <WeatherInfo key={weatherInfo.id} {...weatherInfo} />)
+  }
+
   render() {
-    return <div className="weatherView">
-      {
-        this.state.weatherInfos
-          ? this.state.weatherInfos.map(weatherInfo =>
-            <WeatherInfo key={weatherInfo.id} {...weatherInfo} />)
-          : <div>Loading...</div>
-      }
+    return <div>
+      <div className="row">
+        <div className="row-margins">
+          <span className="btn btn-xs btn-success pull-right" title="Refresh"
+            onClick={() => this.onRefresh()}>
+            <i className="fas fa-redo"></i>
+          </span>
+        </div>
+      </div>
+      <div className="row">
+        <div className="weatherView">
+          {this.state.weatherInfos && this.renderWeatherInfos()}
+        </div>
+      </div>
     </div>
   }
 }

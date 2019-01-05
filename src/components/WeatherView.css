@@ -10,3 +10,7 @@
     justify-content: space-between;
   }
 }
+
+.refresh-button {
+  color: green;
+}
