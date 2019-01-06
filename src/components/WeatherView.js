@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import { ErrorPanel } from './ErrorPanel'
 import { WeatherInfo } from './WeatherInfo'
+import { WeatherInfoLoader } from './loaders/WeatherInfoLoader'
 import { getWeatherInfo } from '../services/weatherInfo'
 import './WeatherView.css'
 
@@ -28,13 +29,14 @@ const LOCATIONS = [
 ]
 
 const LOCATION_IDS = LOCATIONS.map(location => location.id)
+const PLACEHOLDERS = LOCATIONS.map(location => ({ id: location.id }))
 
 export class WeatherView extends Component {
 
   constructor() {
     super()
     this.state = {
-      weatherInfos: null,
+      weatherInfos: PLACEHOLDERS,
       busy: false,
       errorMessage: null
     }
@@ -58,7 +60,7 @@ export class WeatherView extends Component {
     } catch (error) {
       console.error(`[WeatherView#getWeatherInfos] ${error.message}`)
       this.setState({
-        weatherInfos: null,
+        weatherInfos: PLACEHOLDERS,
         errorMessage: error.message
       })
     } finally {
@@ -80,7 +82,9 @@ export class WeatherView extends Component {
   renderWeatherInfos() {
     console.log(`[WeatherView#renderWeatherInfos]`)
     return this.state.weatherInfos.map(weatherInfo =>
-      <WeatherInfo key={weatherInfo.id} {...weatherInfo} />)
+      this.state.busy
+        ? <WeatherInfoLoader key={weatherInfo.id} />
+        : <WeatherInfo key={weatherInfo.id} {...weatherInfo} />)
   }
 
   render() {
@@ -93,6 +97,7 @@ export class WeatherView extends Component {
               <img className="busy-indicator" alt="busy indicator" src="/spinner.gif" />
             }
             <span className="btn btn-xs btn-success" title="Refresh"
+              disabled={this.state.busy}
               onClick={() => this.onRefresh()}>
               <i className="fas fa-redo"></i>
             </span>
