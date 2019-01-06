@@ -1,11 +1,33 @@
-.weatherInfo {
+.weather-info {
+  color: rgb(80, 80, 80);
   background-color: aliceblue;
+  font-family: Arial;
   padding: 10px;
   margin: 10px;
   flex: 1 0 0;
 }
 
-.weatherInfo ul {
+.weather-info__location {
+  font-size: large;
+}
+
+.weather-info__temp-range {
+  font-size: x-small;
+}
+
+.weather-info__temperature {
+  font-size: large;
+}
+
+.weather-info__description {
+  font-size: medium;
+}
+
+.weatherInfo__list {
   list-style: none;
   padding-left: 0;
+}
+
+.weatherInfo__list-item {
+  font-size: small;
 }

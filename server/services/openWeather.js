@@ -38,12 +38,16 @@ const configure = (apiKey, exposeErrorDetails) => {
   const openWeatherResultToViewModelResult = openWeatherResult => ({
     id: openWeatherResult.id,
     country: openWeatherResult.sys.country,
+    location: `${openWeatherResult.name}, ${openWeatherResult.sys.country}`,
     city: openWeatherResult.name,
     description: openWeatherResult.weather[0].description,
     imageUrl: makeImageUrl(openWeatherResult.weather[0].icon),
     currentTemp: openWeatherResult.main.temp,
     minTemp: openWeatherResult.main.temp_min,
-    maxTemp: openWeatherResult.main.temp_max
+    maxTemp: openWeatherResult.main.temp_max,
+    humidity: openWeatherResult.main.humidity,
+    pressure: openWeatherResult.main.pressure,
+    windSpeed: openWeatherResult.wind.speed
   })
 
   const makeImageUrl = icon =>
