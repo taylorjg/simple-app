@@ -1,15 +1,15 @@
 const express = require('express')
-const configure = require('../services/openWeather')
+const configureService = require('../services/openWeather')
 
-const buildRouter = (apiKey, exposeErrorDetails) => {
+const configureRouter = (apiKey, exposeErrorDetails) => {
 
-  const openWeather = configure(apiKey, exposeErrorDetails)
+  const service = configureService(apiKey, exposeErrorDetails)
 
   const getWeatherInfo = async (req, res) => {
     try {
       const ids = req.params.ids.split(',').map(s => s.trim())
       console.log(`[api.weatherInfo.getWeatherInfo] ids: ${ids.join(',')}`)
-      const results = await openWeather.getWeatherInfo(ids)
+      const results = await service.getWeatherInfo(ids)
       res.json(results)
     }
     catch (error) {
@@ -25,5 +25,5 @@ const buildRouter = (apiKey, exposeErrorDetails) => {
 }
 
 module.exports = {
-  buildRouter
+  configureRouter
 }

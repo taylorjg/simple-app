@@ -1,6 +1,6 @@
 const axios = require('axios')
 
-const configure = (apiKey, exposeErrorDetails) => {
+const configureService = (apiKey, exposeErrorDetails) => {
 
   const axiosInstance = axios.create({
     baseURL: 'https://api.openweathermap.org'
@@ -75,9 +75,11 @@ const configure = (apiKey, exposeErrorDetails) => {
     return [detailedErrorMessage, clientErrorMessage]
   }
 
-  return {
+  const service = {
     getWeatherInfo
   }
+
+  return service
 }
 
-module.exports = configure
+module.exports = configureService
