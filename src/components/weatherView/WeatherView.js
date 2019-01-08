@@ -1,42 +1,19 @@
 import React, { Component } from 'react'
+import PropTypes from 'prop-types'
 import { ErrorPanel } from './ErrorPanel'
 import { WeatherInfo } from './WeatherInfo'
 import { WeatherInfoLoader } from './loaders/WeatherInfoLoader'
-import { getWeatherInfo } from '../services/weatherInfo'
+import { getWeatherInfo } from '../../services/weatherInfo'
 import './WeatherView.css'
-
-const LOCATIONS = [
-  {
-    country: 'GB',
-    city: 'Manchester',
-    id: 2643123
-  },
-  {
-    country: 'GB',
-    city: 'Edinburgh',
-    id: 2650225
-  },
-  {
-    country: 'GB',
-    city: 'London',
-    id: 2643743
-  },
-  {
-    country: 'AU',
-    city: 'Sydney',
-    id: 2147714
-  }
-]
-
-const LOCATION_IDS = LOCATIONS.map(location => location.id)
-const PLACEHOLDERS = LOCATIONS.map(location => ({ id: location.id }))
 
 export class WeatherView extends Component {
 
-  constructor() {
-    super()
+  constructor(props) {
+    super(props)
+    this.locationIds = props.locations.map(location => location.id)
+    this.placeHolders = props.locations.map(location => ({ id: location.id }))
     this.state = {
-      weatherInfos: PLACEHOLDERS,
+      weatherInfos: this.placeHolders,
       busy: false,
       errorMessage: null
     }
@@ -55,12 +32,12 @@ export class WeatherView extends Component {
     try {
       console.log(`[WeatherView#getWeatherInfos]`)
       this.setState({ busy: true })
-      const weatherInfos = await getWeatherInfo(LOCATION_IDS)
+      const weatherInfos = await getWeatherInfo(this.locationIds)
       this.setState({ weatherInfos })
     } catch (error) {
       console.error(`[WeatherView#getWeatherInfos] ${error.message}`)
       this.setState({
-        weatherInfos: PLACEHOLDERS,
+        weatherInfos: this.placeHolders,
         errorMessage: error.message
       })
     } finally {
@@ -70,12 +47,18 @@ export class WeatherView extends Component {
     }
   }
 
+  onPreferences() {
+    console.log(`[WeatherView#onPreferences]`)
+    this.props.history.push('/preferences')
+  }
+
   onRefresh() {
     console.log(`[WeatherView#onRefresh]`)
     this.getWeatherInfos()
   }
 
-  clearErrorMessage() {
+  onCloseErrorPanel() {
+    console.log(`[WeatherView#onCloseErrorPanel]`)
     this.setState({ errorMessage: null })
   }
 
@@ -91,6 +74,9 @@ export class WeatherView extends Component {
     return <div>
       <div className="row">
         <div className="row-margins">
+          <button className="btn btn-sm btn-primary"
+            onClick={this.onPreferences.bind(this)}
+          >Preferences &nbsp; <i className="fas fa-caret-right"></i></button>
           <div className="pull-right">
             {
               this.state.busy &&
@@ -98,16 +84,15 @@ export class WeatherView extends Component {
             }
             <span className="btn btn-xs btn-success" title="Refresh"
               disabled={this.state.busy}
-              onClick={() => this.onRefresh()}>
-              <i className="fas fa-redo"></i>
-            </span>
+              onClick={this.onRefresh.bind(this)}
+            ><i className="fas fa-redo"></i></span>
           </div>
         </div>
       </div>
       <div className="row">
         <div className="row-margins">
           <ErrorPanel errorMessage={this.state.errorMessage}
-            onClose={() => this.clearErrorMessage()} />
+            onClose={this.onCloseErrorPanel.bind(this)} />
         </div>
       </div>
       <div className="row">
@@ -117,4 +102,8 @@ export class WeatherView extends Component {
       </div>
     </div>
   }
+}
+
+WeatherView.propTypes = {
+  locations: PropTypes.arrayOf(PropTypes.object).isRequired
 }

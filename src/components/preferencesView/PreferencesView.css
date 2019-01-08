@@ -1,0 +1,10 @@
+/* .preferences {
+} */
+
+.preferences__buttons {
+  margin-top: 10px;
+}
+
+.preferences__buttons button {
+  margin-right: 5px;
+}

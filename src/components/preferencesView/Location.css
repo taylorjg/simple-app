@@ -1,0 +1,13 @@
+.location-item {
+  margin-bottom: 5px;
+  display: flex;
+  flex-flow: row;
+}
+
+.location-item__location {
+  width: 200px;
+}
+
+.location-item__delete-button {
+  margin-left: 5px;
+}
