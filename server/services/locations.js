@@ -7,6 +7,7 @@ const initialiseLocations = () => {
   const sortObjectsByCity = R.sortWith([R.ascend(object => object.city)])
   const transformObject = object => ({
     id: object.id,
+    location: `${object.name}, ${object.country}`,
     city: object.name,
     country: object.country
   })

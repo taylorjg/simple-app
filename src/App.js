@@ -2,38 +2,21 @@ import React, { Component } from 'react'
 import { BrowserRouter as Router, Route } from 'react-router-dom'
 import { WeatherView } from './components/weatherView/WeatherView'
 import { PreferencesView } from './components/preferencesView/PreferencesView'
+import { DEFAULT_LOCATIONS } from './defaultLocations'
 import { version } from '../package.json'
 import './App.css'
 
-const LOCATIONS = [
-  {
-    country: 'GB',
-    city: 'Manchester',
-    id: 2643123
-  },
-  {
-    country: 'GB',
-    city: 'Edinburgh',
-    id: 2650225
-  },
-  {
-    country: 'GB',
-    city: 'London',
-    id: 2643743
-  },
-  {
-    country: 'AU',
-    city: 'Sydney',
-    id: 2147714
-  }
-]
+// https://github.com/ReactTraining/react-router/issues/4105#issuecomment-289195202
+const RouteWithProps = ({ component, ...rest }) =>
+  <Route {...rest} render={props =>
+    React.createElement(component, { ...props, ...rest })} />
 
 class App extends Component {
 
   constructor(props) {
     super(props)
     this.state = {
-      locations: LOCATIONS
+      locations: DEFAULT_LOCATIONS
     }
   }
 
@@ -57,15 +40,12 @@ class App extends Component {
         </div>
         <Router>
           <div>
-            <Route path="/" exact
-              render={props =>
-                <WeatherView {...props} locations={this.state.locations} />
-              }
+            <RouteWithProps path="/" exact component={WeatherView}
+              locations={this.state.locations}
             />
-            <Route path="/preferences" exact
-              render={props =>
-                <PreferencesView {...props} locations={this.state.locations} saveLocations={this.saveLocations.bind(this)} />
-              }
+            <RouteWithProps path="/preferences" exact component={PreferencesView}
+              locations={this.state.locations}
+              saveLocations={this.saveLocations.bind(this)}
             />
           </div>
         </Router>

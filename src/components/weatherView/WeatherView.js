@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
+import { Link } from 'react-router-dom'
 import { ErrorPanel } from './ErrorPanel'
 import { WeatherInfo } from './WeatherInfo'
 import { WeatherInfoLoader } from './loaders/WeatherInfoLoader'
@@ -47,11 +48,6 @@ export class WeatherView extends Component {
     }
   }
 
-  onPreferences() {
-    console.log(`[WeatherView#onPreferences]`)
-    this.props.history.push('/preferences')
-  }
-
   onRefresh() {
     console.log(`[WeatherView#onRefresh]`)
     this.getWeatherInfos()
@@ -74,9 +70,9 @@ export class WeatherView extends Component {
     return <div>
       <div className="row">
         <div className="row-margins">
-          <button className="btn btn-sm btn-primary"
-            onClick={this.onPreferences.bind(this)}
-          >Preferences &nbsp; <i className="fas fa-caret-right"></i></button>
+          <Link to="/preferences" className="btn btn-sm btn-primary">
+            Preferences &nbsp; <i className="fas fa-caret-right"></i>
+          </Link>
           <div className="pull-right">
             {
               this.state.busy &&
