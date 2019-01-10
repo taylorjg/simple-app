@@ -11,7 +11,10 @@ const initialiseLocations = () => {
     city: object.name,
     country: object.country
   })
-  const transformAndSortObjects = R.compose(sortObjectsByCity, R.map(transformObject))
+  const transformAndSortObjects = R.compose(
+    sortObjectsByCity,
+    R.uniqBy(object => object.city),
+    R.map(transformObject))
   const transformAndSortValues = ([key, value]) => [key, transformAndSortObjects(value)]
   const pipe = R.pipe(
     R.groupBy(object => object.country),
@@ -22,13 +25,13 @@ const initialiseLocations = () => {
   return pipe(cityList)
 }
 
-let LOCATIONS = null
+let locations = null
 
 const getLocations = () => {
-  if (!LOCATIONS) {
-    LOCATIONS = initialiseLocations()
+  if (!locations) {
+    locations = initialiseLocations()
   }
-  return LOCATIONS
+  return locations
 }
 
 module.exports = {

@@ -1,5 +1,10 @@
-/* .preferences {
-} */
+form {
+  margin-bottom: 20px;
+}
+
+form * {
+  margin-right: 3px;
+}
 
 .preferences__buttons {
   margin-top: 10px;

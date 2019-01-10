@@ -38,7 +38,7 @@ export class WeatherView extends Component {
     } catch (error) {
       console.error(`[WeatherView#getWeatherInfos] ${error.message}`)
       this.setState({
-        weatherInfos: this.placeHolders,
+        weatherInfos: [],
         errorMessage: error.message
       })
     } finally {
@@ -70,8 +70,8 @@ export class WeatherView extends Component {
     return <div>
       <div className="row">
         <div className="row-margins">
-          <Link to="/preferences" className="btn btn-sm btn-primary">
-            Preferences &nbsp; <i className="fas fa-caret-right"></i>
+          <Link to="/preferences" className="btn btn-xs btn-primary">
+            Preferences
           </Link>
           <div className="pull-right">
             {
