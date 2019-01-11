@@ -24,4 +24,5 @@ yarn-error.log*
 
 # my additions
 env.sh
+.env
 server/public/
