@@ -1,11 +1,19 @@
 import axios from 'axios'
+import { formatAxiosError } from '../utils'
 
-let locations = null
-
-export const getCountries = async () => {
-  if (!locations) {
-    const response = await axios.get('/api/locations')
-    locations = response.data
+export const search = async input => {
+  try {
+    const config = {
+      params: {
+        input
+      }
+    }
+    const response = await axios.get('/api/search', config)
+    return response.data
+  } catch (error) {
+    const baseMessage = 'An error occurred searching for auto-completion matches'
+    const errorMessage = formatAxiosError(error, baseMessage)
+    console.error(errorMessage)
+    return ['-- Error --']
   }
-  return locations
 }

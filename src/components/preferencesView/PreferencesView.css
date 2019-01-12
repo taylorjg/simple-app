@@ -6,6 +6,10 @@ form * {
   margin-right: 3px;
 }
 
+.preferences__search-input {
+  width: 300px;
+}
+
 .preferences__buttons {
   margin-top: 10px;
 }
