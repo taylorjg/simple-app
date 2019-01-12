@@ -1,4 +1,5 @@
 const axios = require('axios')
+const formatLocation = require('./formatLocation')
 
 const configureService = (apiKey, exposeErrorDetails) => {
 
@@ -37,9 +38,9 @@ const configureService = (apiKey, exposeErrorDetails) => {
 
   const openWeatherResultToViewModelResult = openWeatherResult => ({
     id: openWeatherResult.id,
-    country: openWeatherResult.sys.country,
-    location: `${openWeatherResult.name}, ${openWeatherResult.sys.country}`,
     city: openWeatherResult.name,
+    country: openWeatherResult.sys.country,
+    location: formatLocation(openWeatherResult.name, openWeatherResult.sys.country),
     description: openWeatherResult.weather[0].description,
     imageUrl: makeImageUrl(openWeatherResult.weather[0].icon),
     currentTemp: openWeatherResult.main.temp,

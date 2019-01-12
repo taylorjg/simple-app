@@ -1,39 +1,49 @@
 const R = require('ramda')
+const formatLocation = require('./formatLocation')
 const cityList = require('./city.list.json')
 
-const initialiseLocations = () => {
-  console.log('[initialiseLocations]')
+const groupLocations = (locations) => {
   const sortKvpsByKey = R.sortWith([R.ascend(([key]) => key)])
-  const sortObjectsByCity = R.sortWith([R.ascend(object => object.city)])
-  const transformObject = object => ({
-    id: object.id,
-    location: `${object.name}, ${object.country}`,
-    city: object.name,
-    country: object.country
-  })
-  const transformAndSortObjects = R.compose(
-    sortObjectsByCity,
-    R.uniqBy(object => object.city),
-    R.map(transformObject))
-  const transformAndSortValues = ([key, value]) => [key, transformAndSortObjects(value)]
+  const sortEntriesByCity = R.sortWith([R.ascend(entry => entry.city)])
+  const mapValues = f => R.map(([key, value]) => [key, f(value)])
   const pipe = R.pipe(
-    R.groupBy(object => object.country),
+    R.groupBy(entry => entry.country),
     R.toPairs,
     sortKvpsByKey,
-    R.map(transformAndSortValues)
+    mapValues(sortEntriesByCity)
   )
-  return pipe(cityList)
+  return pipe(locations)
 }
 
-let locations = null
+const flatLocations =
+  R.pipe(
+    R.map(entry => ({
+      id: entry.id,
+      city: entry.name,
+      country: entry.country,
+      location: formatLocation(entry.name, entry.country),
+      lowercaseCity: entry.name.toLowerCase()
+    })),
+    R.uniqBy(entry => entry.location)
+  )(cityList)
 
-const getLocations = () => {
-  if (!locations) {
-    locations = initialiseLocations()
-  }
-  return locations
+const groupedLocations = groupLocations(flatLocations)
+
+const getLocations = () => groupedLocations
+
+const search = input => {
+  const lowercaseInput = input.toLowerCase()
+  return R.pipe(
+    R.filter(entry => entry.lowercaseCity.includes(lowercaseInput)),
+    R.sortWith([
+      R.ascend(entry => entry.city.length),
+      R.ascend(entry => entry.country)
+    ]),
+    R.take(5)
+  )(flatLocations)
 }
 
 module.exports = {
-  getLocations
+  getLocations,
+  search
 }

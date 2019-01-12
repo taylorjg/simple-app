@@ -40,7 +40,7 @@ class App extends Component {
         </div>
         <Router>
           <div>
-            <RouteWithProps path="/" exact component={WeatherView}
+            <RouteWithProps path={['/', '/index.html']} exact component={WeatherView}
               locations={this.state.locations}
             />
             <RouteWithProps path="/preferences" exact component={PreferencesView}

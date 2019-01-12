@@ -11,8 +11,7 @@ const configureRouter = (apiKey, exposeErrorDetails) => {
       console.log(`[api.weatherInfo.getWeatherInfo] ids: ${ids.join(',')}`)
       const results = await service.getWeatherInfo(ids)
       res.json(results)
-    }
-    catch (error) {
+    } catch (error) {
       console.log(`[api.weatherInfo.getWeatherInfo] ${error}`)
       res.status(500).send(error.message || 'Internal Server Error')
     }

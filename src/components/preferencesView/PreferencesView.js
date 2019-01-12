@@ -35,7 +35,7 @@ export class PreferencesView extends Component {
   }
 
   componentDidCatch(error, info) {
-    console.error(`[PreferencesView#componentDidCatch] error: ${error}; info: ${info}`)
+    console.error(`[PreferencesView#componentDid] error: ${error}; info: ${info}`)
   }
 
   onCountryChanged(e) {
