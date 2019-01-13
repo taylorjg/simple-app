@@ -1,13 +1,5 @@
 form {
-  margin-bottom: 20px;
-}
-
-form * {
-  margin-right: 3px;
-}
-
-.preferences__search-input {
-  width: 300px;
+  margin-bottom: 25px;
 }
 
 .preferences__buttons {

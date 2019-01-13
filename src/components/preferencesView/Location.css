@@ -2,12 +2,14 @@
   margin-bottom: 5px;
   display: flex;
   flex-flow: row;
+  align-items: center;
 }
 
 .location-item__location {
-  width: 200px;
+  flex: 1 0;
 }
 
 .location-item__delete-button {
   margin-left: 5px;
+  flex: 0 0;
 }

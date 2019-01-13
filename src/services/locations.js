@@ -14,6 +14,6 @@ export const search = async input => {
     const baseMessage = 'An error occurred searching for auto-completion matches'
     const errorMessage = formatAxiosError(error, baseMessage)
     console.error(errorMessage)
-    return ['-- Error --']
+    return []
   }
 }
