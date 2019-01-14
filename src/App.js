@@ -47,6 +47,7 @@ class App extends Component {
               locations={this.state.locations}
               saveLocations={this.saveLocations.bind(this)}
             />
+            {/* TODO: default not found page ? */}
           </div>
         </Router>
       </div>

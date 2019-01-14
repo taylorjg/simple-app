@@ -1,0 +1,8 @@
+.navigation-links {
+  display: inline-block;
+}
+
+.navigation-links__separator {
+  margin-left: 5px;
+  margin-right: 5px;
+}

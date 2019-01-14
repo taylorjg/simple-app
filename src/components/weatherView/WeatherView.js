@@ -1,8 +1,8 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
-import { Link } from 'react-router-dom'
 import { ErrorPanel } from './ErrorPanel'
 import { WeatherInfo } from './WeatherInfo'
+import { NavigationLinks } from '../common/NavigationLinks'
 import { WeatherInfoLoader } from './loaders/WeatherInfoLoader'
 import { getWeatherInfo } from '../../services/weatherInfo'
 import './WeatherView.css'
@@ -70,9 +70,7 @@ export class WeatherView extends Component {
     return <div>
       <div className="row">
         <div className="row-margins">
-          <Link to="/preferences" className="btn btn-xs btn-primary">
-            Preferences
-          </Link>
+          <NavigationLinks />
           <div className="pull-right">
             {
               this.state.busy &&

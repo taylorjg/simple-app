@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
-import { Link } from 'react-router-dom'
+import { NavigationLinks } from '../common/NavigationLinks'
 import * as R from 'ramda'
 import { Location } from './Location'
 import { search } from '../../services/locations'
@@ -43,28 +43,23 @@ export class PreferencesView extends Component {
   onAdd(e) {
     e.preventDefault()
     console.log(`[PreferencesView#onAdd] selectedMatch: ${JSON.stringify(this.state.selectedMatch)}`)
+    const newLocations = R.append(this.state.selectedMatch, this.state.locations)
     this.setState({
-      locations: [...this.state.locations, this.state.selectedMatch],
+      locations: newLocations,
       searchValue: '',
       matches: [],
       selectedMatch: null
     })
+    this.props.saveLocations(newLocations)
   }
 
   onDelete(id) {
     console.log(`[PreferencesView#onSave] id: ${id}`)
+    const newLocations = R.reject(location => location.id === id, this.state.locations)
     this.setState({
-      locations: R.reject(location => location.id === id, this.state.locations)
+      locations: newLocations
     })
-  }
-
-  onSave(/* e */) {
-    console.log('[PreferencesView#onSave]')
-    this.props.saveLocations(this.state.locations)
-  }
-
-  onCancel(/* e */) {
-    console.log('[PreferencesView#onCancel]')
+    this.props.saveLocations(newLocations)
   }
 
   renderItem(match, isHighlighted) {
@@ -127,6 +122,11 @@ export class PreferencesView extends Component {
   render() {
     return <div className="preferences">
       <div className="row">
+        <div className="row-margins">
+          <NavigationLinks />
+        </div>
+      </div>
+      <div className="row">
         <div className="col-xs-12 col-md-4 col-md-offset-4">
           {this.renderForm()}
         </div>
@@ -134,12 +134,6 @@ export class PreferencesView extends Component {
       <div className="row">
         <div className="col-xs-12 col-md-4 col-md-offset-4">
           {this.renderLocations()}
-          <div className="preferences__buttons">
-            <Link to="/" className="btn btn-xs btn-primary"
-              onClick={this.onSave.bind(this)}>Save</Link>
-            <Link to="/" className="btn btn-xs btn-default"
-              onClick={this.onCancel.bind(this)}>Cancel</Link>
-          </div>
         </div>
       </div>
     </div>
