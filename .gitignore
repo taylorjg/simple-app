@@ -28,4 +28,3 @@ server/public/
 
 # temporary
 aws/*infrastructure*.*
-aws/*dns*.*
