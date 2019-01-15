@@ -12,6 +12,10 @@ const LINKS = [
   {
     path: '/preferences',
     label: 'Preferences'
+  },
+  {
+    path: '/profile',
+    label: 'Profile'
   }
 ]
 

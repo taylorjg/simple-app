@@ -1,8 +1,7 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
-import { ErrorPanel } from './ErrorPanel'
+import { withHeader } from '../common/Header'
 import { WeatherInfo } from './WeatherInfo'
-import { NavigationLinks } from '../common/NavigationLinks'
 import { WeatherInfoLoader } from './loaders/WeatherInfoLoader'
 import { getWeatherInfo } from '../../services/weatherInfo'
 import './WeatherView.css'
@@ -15,8 +14,7 @@ export class WeatherView extends Component {
     this.placeHolders = props.locations.map(location => ({ id: location.id }))
     this.state = {
       weatherInfos: this.placeHolders,
-      busy: false,
-      errorMessage: null
+      busy: false
     }
   }
 
@@ -37,10 +35,8 @@ export class WeatherView extends Component {
       this.setState({ weatherInfos })
     } catch (error) {
       console.error(`[WeatherView#getWeatherInfos] ${error.message}`)
-      this.setState({
-        weatherInfos: [],
-        errorMessage: error.message
-      })
+      this.setState({ weatherInfos: [] })
+      this.props.showErrorMessage(error.message)
     } finally {
       setTimeout(() => {
         this.setState({ busy: false })
@@ -53,9 +49,21 @@ export class WeatherView extends Component {
     this.getWeatherInfos()
   }
 
-  onCloseErrorPanel() {
-    console.log(`[WeatherView#onCloseErrorPanel]`)
-    this.setState({ errorMessage: null })
+  renderRightContent() {
+    return (
+      <div className="pull-right">
+        {
+          this.state.busy &&
+          <img className="busy-indicator" alt="busy indicator" src="/spinner.gif" />
+        }
+        <span className="btn btn-xs btn-success" title="Refresh"
+          disabled={this.state.busy}
+          onClick={this.onRefresh.bind(this)}
+        >
+          <i className="fas fa-redo"></i>
+        </span>
+      </div>
+    )
   }
 
   renderWeatherInfos() {
@@ -70,28 +78,12 @@ export class WeatherView extends Component {
     return <div>
       <div className="row">
         <div className="row-margins">
-          <NavigationLinks />
-          <div className="pull-right">
-            {
-              this.state.busy &&
-              <img className="busy-indicator" alt="busy indicator" src="/spinner.gif" />
-            }
-            <span className="btn btn-xs btn-success" title="Refresh"
-              disabled={this.state.busy}
-              onClick={this.onRefresh.bind(this)}
-            ><i className="fas fa-redo"></i></span>
-          </div>
-        </div>
-      </div>
-      <div className="row">
-        <div className="row-margins">
-          <ErrorPanel errorMessage={this.state.errorMessage}
-            onClose={this.onCloseErrorPanel.bind(this)} />
+          {this.renderRightContent()}
         </div>
       </div>
       <div className="row">
         <div className="weatherView">
-          {this.state.weatherInfos && this.renderWeatherInfos()}
+          {this.renderWeatherInfos()}
         </div>
       </div>
     </div>
@@ -99,5 +91,8 @@ export class WeatherView extends Component {
 }
 
 WeatherView.propTypes = {
+  showErrorMessage: PropTypes.func.isRequired,
   locations: PropTypes.arrayOf(PropTypes.object).isRequired
 }
+
+export const WeatherViewWithHeader = withHeader(WeatherView)

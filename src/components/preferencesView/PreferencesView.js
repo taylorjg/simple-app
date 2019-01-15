@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
-import { NavigationLinks } from '../common/NavigationLinks'
 import * as R from 'ramda'
+import { withHeader } from '../common/Header'
 import { Location } from './Location'
 import { search } from '../../services/locations'
 import Autocomplete from 'react-autocomplete'
@@ -20,7 +20,7 @@ export class PreferencesView extends Component {
   }
 
   componentDidCatch(error, info) {
-    console.error(`[PreferencesView#componentDid] error: ${error}; info: ${info}`)
+    console.error(`[PreferencesView#componentDidCatch] error: ${error}; info: ${info}`)
   }
 
   async onAutocompleteChange(_, searchValue) {
@@ -54,7 +54,7 @@ export class PreferencesView extends Component {
   }
 
   onDelete(id) {
-    console.log(`[PreferencesView#onSave] id: ${id}`)
+    console.log(`[PreferencesView#onDelete] id: ${id}`)
     const newLocations = R.reject(location => location.id === id, this.state.locations)
     this.setState({
       locations: newLocations
@@ -122,11 +122,6 @@ export class PreferencesView extends Component {
   render() {
     return <div className="preferences">
       <div className="row">
-        <div className="row-margins">
-          <NavigationLinks />
-        </div>
-      </div>
-      <div className="row">
         <div className="col-xs-12 col-md-4 col-md-offset-4">
           {this.renderForm()}
         </div>
@@ -141,6 +136,9 @@ export class PreferencesView extends Component {
 }
 
 PreferencesView.propTypes = {
+  showErrorMessage: PropTypes.func.isRequired,
   locations: PropTypes.arrayOf(PropTypes.object).isRequired,
   saveLocations: PropTypes.func.isRequired
 }
+
+export const PreferencesViewWithHeader = withHeader(PreferencesView)

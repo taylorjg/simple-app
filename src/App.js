@@ -1,7 +1,8 @@
 import React, { Component } from 'react'
 import { BrowserRouter as Router, Route } from 'react-router-dom'
-import { WeatherView } from './components/weatherView/WeatherView'
-import { PreferencesView } from './components/preferencesView/PreferencesView'
+import { WeatherViewWithHeader } from './components/weatherView/WeatherView'
+import { PreferencesViewWithHeader } from './components/preferencesView/PreferencesView'
+import { ProfileViewWithHeader } from './components/profileView/ProfileView'
 import { DEFAULT_LOCATIONS } from './defaultLocations'
 import { version } from '../package.json'
 import './App.css'
@@ -40,13 +41,14 @@ class App extends Component {
         </div>
         <Router>
           <div>
-            <RouteWithProps path={['/', '/index.html']} exact component={WeatherView}
+            <RouteWithProps path={['/', '/index.html']} exact component={WeatherViewWithHeader}
               locations={this.state.locations}
             />
-            <RouteWithProps path="/preferences" exact component={PreferencesView}
+            <RouteWithProps path="/preferences" exact component={PreferencesViewWithHeader}
               locations={this.state.locations}
               saveLocations={this.saveLocations.bind(this)}
             />
+            <RouteWithProps path="/profile" exact component={ProfileViewWithHeader} />
             {/* TODO: default not found page ? */}
           </div>
         </Router>
