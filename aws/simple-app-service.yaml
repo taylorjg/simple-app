@@ -66,7 +66,7 @@ Resources:
             !Sub "${AWS::AccountId}.dkr.ecr.${AWS::Region}.amazonaws.com/simple-app:${Tag}"
           ReadonlyRootFilesystem: true
           PortMappings:
-          - ContainerPort: 3001
+          - ContainerPort: 80
           LogConfiguration:
             LogDriver: awslogs
             Options:
@@ -74,6 +74,8 @@ Resources:
               awslogs-region: !Ref AWS::Region
               awslogs-stream-prefix: simple-app
           Environment:
+            - Name: PORT
+              Value: 80
             - Name: OPEN_WEATHER_API_KEY
               Value: "{{resolve:secretsmanager:OPEN_WEATHER_API_KEY}}"
   ServiceSecurityGroup:
@@ -83,8 +85,8 @@ Resources:
       SecurityGroupIngress:
         - IpProtocol: "tcp"
           CidrIp: 0.0.0.0/0
-          FromPort: 3001
-          ToPort: 3001
+          FromPort: 80
+          ToPort: 80
   Service:
     Type: AWS::ECS::Service
     Properties:
