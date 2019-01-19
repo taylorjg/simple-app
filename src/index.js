@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom'
 import './index.css'
 import App from './App'
 import * as serviceWorker from './serviceWorker'
+import * as log from 'loglevel'
 
 ReactDOM.render(<App />, document.getElementById('root'))
 
@@ -10,3 +11,7 @@ ReactDOM.render(<App />, document.getElementById('root'))
 // unregister() to register() below. Note this comes with some pitfalls.
 // Learn more about service workers: http://bit.ly/CRA-PWA
 serviceWorker.unregister()
+
+// So that we can change the current log level in a browser's developer tools window
+// e.g. log.setLevel('debug')
+window.log = log

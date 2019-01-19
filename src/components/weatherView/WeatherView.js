@@ -4,6 +4,7 @@ import { withHeader } from '../common/Header'
 import { WeatherInfo } from './WeatherInfo'
 import { WeatherInfoLoader } from './loaders/WeatherInfoLoader'
 import { getWeatherInfo } from '../../services/weatherInfo'
+import * as log from 'loglevel'
 import './WeatherView.css'
 
 export class WeatherView extends Component {
@@ -19,22 +20,22 @@ export class WeatherView extends Component {
   }
 
   componentDidMount() {
-    console.log(`[WeatherView#componentDidMount]`)
+    log.info(`[WeatherView#componentDidMount]`)
     this.getWeatherInfos()
   }
 
   componentDidCatch(error, info) {
-    console.error(`[WeatherView#componentDidCatch] error: ${error}; info: ${info}`)
+    log.error(`[WeatherView#componentDidCatch] error: ${error}; info: ${info}`)
   }
 
   async getWeatherInfos() {
     try {
-      console.log(`[WeatherView#getWeatherInfos]`)
+      log.info(`[WeatherView#getWeatherInfos]`)
       this.setState({ busy: true })
       const weatherInfos = await getWeatherInfo(this.locationIds)
       this.setState({ weatherInfos })
     } catch (error) {
-      console.error(`[WeatherView#getWeatherInfos] ${error.message}`)
+      log.error(`[WeatherView#getWeatherInfos] ${error.message}`)
       this.setState({ weatherInfos: [] })
       this.props.showErrorMessage(error.message)
     } finally {
@@ -45,7 +46,7 @@ export class WeatherView extends Component {
   }
 
   onRefresh() {
-    console.log(`[WeatherView#onRefresh]`)
+    log.info(`[WeatherView#onRefresh]`)
     this.getWeatherInfos()
   }
 
@@ -67,7 +68,7 @@ export class WeatherView extends Component {
   }
 
   renderWeatherInfos() {
-    console.log(`[WeatherView#renderWeatherInfos]`)
+    log.info(`[WeatherView#renderWeatherInfos]`)
     return this.state.weatherInfos.map(weatherInfo =>
       this.state.busy
         ? <WeatherInfoLoader key={weatherInfo.id} />

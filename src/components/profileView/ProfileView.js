@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import { withHeader } from '../common/Header'
+import * as log from 'loglevel'
 import './ProfileView.css'
 
 export class ProfileView extends Component {
@@ -12,7 +13,7 @@ export class ProfileView extends Component {
   }
 
   componentDidCatch(error, info) {
-    console.error(`[ProfileView#componentDidCatch] error: ${error}; info: ${info}`)
+    log.error(`[ProfileView#componentDidCatch] error: ${error}; info: ${info}`)
   }
 
   render() {
@@ -20,7 +21,7 @@ export class ProfileView extends Component {
       <div className="row">
         <div className="row-margins">
           <div style={{
-            padding: '200px',
+            paddingTop: '100px',
             display: 'flex',
             justifyContent: 'center',
             alignItems: 'center'

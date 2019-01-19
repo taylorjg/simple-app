@@ -5,6 +5,7 @@ import { PreferencesViewWithHeader } from './components/preferencesView/Preferen
 import { ProfileViewWithHeader } from './components/profileView/ProfileView'
 import { DEFAULT_LOCATIONS } from './defaultLocations'
 import { version } from '../package.json'
+import * as log from 'loglevel'
 import './App.css'
 
 // https://github.com/ReactTraining/react-router/issues/4105#issuecomment-289195202
@@ -22,7 +23,7 @@ class App extends Component {
   }
 
   saveLocations(locations) {
-    console.log(`[App#saveLocations]`)
+    log.info(`[App#saveLocations]`)
     this.setState({
       locations
     })

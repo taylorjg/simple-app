@@ -5,6 +5,7 @@ import { withHeader } from '../common/Header'
 import { Location } from './Location'
 import { search } from '../../services/locations'
 import Autocomplete from 'react-autocomplete'
+import * as log from 'loglevel'
 import './PreferencesView.css'
 
 export class PreferencesView extends Component {
@@ -20,18 +21,18 @@ export class PreferencesView extends Component {
   }
 
   componentDidCatch(error, info) {
-    console.error(`[PreferencesView#componentDidCatch] error: ${error}; info: ${info}`)
+    log.error(`[PreferencesView#componentDidCatch] error: ${error}; info: ${info}`)
   }
 
   async onAutocompleteChange(_, searchValue) {
-    console.log(`[PreferencesView#onAutocompleteChange] searchValue: ${searchValue}`)
+    log.info(`[PreferencesView#onAutocompleteChange] searchValue: ${searchValue}`)
     this.setState({ searchValue })
     const matches = await search(searchValue)
     this.setState({ matches })
   }
 
   onAutocompleteSelect(searchValue, selectedMatch) {
-    console.log(`[PreferencesView#onAutocompleteSelect] searchValue: ${searchValue}; selectedMatch: ${JSON.stringify(selectedMatch)}`)
+    log.info(`[PreferencesView#onAutocompleteSelect] searchValue: ${searchValue}; selectedMatch: ${JSON.stringify(selectedMatch)}`)
     if (selectedMatch.city && selectedMatch.country) {
       this.setState({
         searchValue,
@@ -42,7 +43,7 @@ export class PreferencesView extends Component {
 
   onAdd(e) {
     e.preventDefault()
-    console.log(`[PreferencesView#onAdd] selectedMatch: ${JSON.stringify(this.state.selectedMatch)}`)
+    log.info(`[PreferencesView#onAdd] selectedMatch: ${JSON.stringify(this.state.selectedMatch)}`)
     const newLocations = R.append(this.state.selectedMatch, this.state.locations)
     this.setState({
       locations: newLocations,
@@ -54,7 +55,7 @@ export class PreferencesView extends Component {
   }
 
   onDelete(id) {
-    console.log(`[PreferencesView#onDelete] id: ${id}`)
+    log.info(`[PreferencesView#onDelete] id: ${id}`)
     const newLocations = R.reject(location => location.id === id, this.state.locations)
     this.setState({
       locations: newLocations
