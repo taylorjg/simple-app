@@ -1,10 +1,12 @@
 {
   "name": "simple-app",
-  "version": "0.0.28",
+  "version": "0.0.29",
   "private": true,
   "dependencies": {
     "aws-sdk": "^2.388.0",
     "axios": "^0.18.0",
+    "loglevel": "^1.6.1",
+    "morgan": "^1.9.1",
     "ramda": "^0.26.1",
     "react": "^16.7.0",
     "react-autocomplete": "^1.8.1",
