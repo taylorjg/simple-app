@@ -6,7 +6,7 @@ import './NavigationLinks.css'
 // TODO: resolve the duplication of paths with <Router> in App.js
 const LINKS = [
   {
-    path: '/',
+    path: ['/', '/index.html'],
     label: 'Home'
   },
   {
@@ -21,29 +21,44 @@ const LINKS = [
 
 class InternalNavigationLinks extends Component {
 
-  renderLink(link) {
+  getPath(link) {
+    return Array.isArray(link.path)
+      ? link.path[0]
+      : link.path
+  }
+
+  isActive(link) {
+    return Array.isArray(link.path)
+      ? link.path.includes(this.props.match.url)
+      : link.path === this.props.match.url
+  }
+
+  renderLink(link, index) {
     return (
-      this.props.match.url === link.path
-        ? <span key={link.path}>{link.label}</span>
-        : <Link key={link.path} to={link.path}>{link.label}</Link>
+      this.isActive(link)
+        ? <span key={index}>{link.label}</span>
+        : <Link key={index} to={this.getPath(link)}>{link.label}</Link>
     )
   }
 
-  renderSeparator() {
+  renderSeparator(index) {
     return (
-      <span className="navigation-links__separator">|</span>
+      <span key={index} className="navigation-links__separator">|</span>
     )
+  }
+
+  renderItem(item, index) {
+    return item
+      ? this.renderLink(item, index)
+      : this.renderSeparator(index)
   }
 
   render() {
     return (
       <div className="navigation-links">
         {
-          R.pipe(
-            R.map((link) => this.renderLink(link)),
-            // TODO: figure out how to add a key prop to each separator
-            R.intersperse(this.renderSeparator())
-          )(LINKS)
+          R.intersperse(null, LINKS)
+            .map((item, index) => this.renderItem(item, index))
         }
       </div>
     )
