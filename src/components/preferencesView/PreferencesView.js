@@ -25,10 +25,16 @@ export class PreferencesView extends Component {
   }
 
   async onAutocompleteChange(_, searchValue) {
-    log.info(`[PreferencesView#onAutocompleteChange] searchValue: ${searchValue}`)
-    this.setState({ searchValue })
-    const matches = await search(searchValue)
-    this.setState({ matches })
+    try {
+      log.info(`[PreferencesView#onAutocompleteChange] searchValue: ${searchValue}`)
+      this.setState({ searchValue })
+      const matches = await search(searchValue)
+      this.setState({ matches })
+    } catch (error) {
+      log.error(`[PreferencesView#onAutocompleteChange] ${error.message}`)
+      this.setState({ matches: [] })
+      this.props.showErrorMessage(error.message)
+    }
   }
 
   onAutocompleteSelect(searchValue, selectedMatch) {

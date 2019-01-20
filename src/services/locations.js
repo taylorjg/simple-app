@@ -1,6 +1,5 @@
 import axios from 'axios'
 import { formatAxiosError } from '../utils'
-import * as log from 'loglevel'
 
 export const search = async input => {
   try {
@@ -14,7 +13,6 @@ export const search = async input => {
   } catch (error) {
     const baseMessage = 'An error occurred searching for auto-completion matches'
     const errorMessage = formatAxiosError(error, baseMessage)
-    log.error(errorMessage)
-    return []
+    throw new Error(errorMessage)
   }
 }
