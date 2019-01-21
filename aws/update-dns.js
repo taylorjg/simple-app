@@ -84,10 +84,11 @@ const updateDnsRecordSet = async (services, hostedZoneId, dnsRecordSet, newPubli
 
 const main = async () => {
   try {
+    const REGION = process.env.AWS_DEFAULT_REGION
     const services = {
-      ecs: new AWS.ECS({ apiVersion: '2014-11-13' }),
-      ec2: new AWS.EC2({ apiVersion: '2016-11-15' }),
-      route53: new AWS.Route53({ apiVersion: '2013-04-01' })
+      ecs: new AWS.ECS({ apiVersion: '2014-11-13', region: REGION }),
+      ec2: new AWS.EC2({ apiVersion: '2016-11-15', region: REGION }),
+      route53: new AWS.Route53({ apiVersion: '2013-04-01', region: REGION })
     }
 
     const taskArn = await findTask(services)
