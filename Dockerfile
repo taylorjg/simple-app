@@ -18,6 +18,6 @@ COPY --from=build /app .
 # Get rid of everything and just install the dependencies needed by the server.
 RUN rm package.json package-lock.json
 RUN npm init -y
-RUN npm install ramda axios express
+RUN npm install ramda axios express connect-history-api-fallback
 
 ENTRYPOINT [ "node", "server" ]
