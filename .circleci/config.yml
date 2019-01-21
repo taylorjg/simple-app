@@ -17,7 +17,7 @@ jobs:
       - run: npm test
   deploy-job:
     docker:
-      - image: circleci/python:2.7-jessie
+      - image: circleci/node:7.10
     steps:
       - checkout
       - run:
@@ -32,17 +32,17 @@ jobs:
             git push --force git@heroku.com:$HEROKU_APP_NAME.git HEAD:refs/heads/master
             heroku restart -a $HEROKU_APP_NAME
       - run:
+          name: Install PIP
+          command: sudo apt-get install python-pip python-dev
+      - run:
           name: Install AWS CLI
           command: sudo pip install awscli
-      - run:
-          name: List ECR
-          command: aws ecr list-images --repository-name simple-app
       - setup_remote_docker
       - run:
           name: Build docker image and push to ECR
           command: aws/publish-image.sh test-1
       - run:
-          name: Update Cloudformation stack
+          name: Update CloudFormation stack
           command: aws/deploy-service.sh test-1
       - run:
           name: Update DNS A record
