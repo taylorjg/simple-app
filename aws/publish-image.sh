@@ -13,7 +13,7 @@ DIR=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
 TAG=$1
 
 ACCOUNT=`aws sts get-caller-identity --output text --query "Account"`
-REGION=`aws configure get region`
+REGION="${AWS_DEFAULT_REGION:-`aws configure get region`}"
 
 FULL_IMAGE_NAME="$ACCOUNT".dkr.ecr."$REGION".amazonaws.com/simple-app:"$TAG"
 
