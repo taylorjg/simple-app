@@ -44,6 +44,7 @@ jobs:
       - run:
           name: Update CloudFormation stack
           command: aws/deploy-service.sh `git describe --always`
+      - run: npm install aws-sdk --no-save
       - run:
           name: Update DNS A record
           command: node aws/update-dns.js
