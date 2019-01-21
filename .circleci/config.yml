@@ -40,10 +40,10 @@ jobs:
       - setup_remote_docker
       - run:
           name: Build docker image and push to ECR
-          command: aws/publish-image.sh test-1
+          command: aws/publish-image.sh `git describe --always`
       - run:
           name: Update CloudFormation stack
-          command: aws/deploy-service.sh test-1
+          command: aws/deploy-service.sh `git describe --always`
       - run:
           name: Update DNS A record
           command: node aws/update-dns.js
