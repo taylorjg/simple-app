@@ -1,10 +1,11 @@
 {
   "name": "simple-app",
-  "version": "0.0.31",
+  "version": "0.0.32",
   "private": true,
   "dependencies": {
     "aws-sdk": "^2.388.0",
     "axios": "^0.18.0",
+    "connect-history-api-fallback": "^1.6.0",
     "loglevel": "^1.6.1",
     "morgan": "^1.9.1",
     "ramda": "^0.26.1",

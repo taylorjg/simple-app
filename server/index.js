@@ -1,5 +1,6 @@
 const path = require('path')
 const express = require('express')
+const history = require('connect-history-api-fallback')
 const weatherInfoApi = require('./api/weatherInfo')
 const locationsApi = require('./api/locations')
 
@@ -10,6 +11,7 @@ const EXPOSE_ERROR_DETAILS = process.env.EXPOSE_ERROR_DETAILS
 const publicFolder = path.join(__dirname, 'public')
 
 const app = express()
+app.use(history())
 app.use('/', express.static(publicFolder))
 
 const weatherInfoApiRouter = weatherInfoApi.configureRouter(OPEN_WEATHER_API_KEY, EXPOSE_ERROR_DETAILS)
