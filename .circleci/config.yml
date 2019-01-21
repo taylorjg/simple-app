@@ -20,6 +20,7 @@ jobs:
       - image: circleci/python:2.7-jessie
     steps:
       - checkout
+      - setup_remote_docker
       - run:
           name: Run setup script
           command: bash .circleci/setup-heroku.sh
