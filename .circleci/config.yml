@@ -31,22 +31,15 @@ jobs:
           command: |
             git push --force git@heroku.com:$HEROKU_APP_NAME.git HEAD:refs/heads/master
             heroku restart -a $HEROKU_APP_NAME
-      # - run:
-      #     name: Install PIP
-      #     command: sudo apt-get install python-pip python-dev
-      # - run:
-      #     name: Install AWS CLI
-      #     command: sudo pip install awscli
       - setup_remote_docker
       - run:
-          name: Build docker image and push to ECR
+          name: Build docker image and push to AWS ECR
           command: aws/publish-image.sh
       - run:
-          name: Create/Update CloudFormation stack
+          name: Create/Update AWS CloudFormation stack
           command: aws/deploy-service.sh
-      # - run: npm install aws-sdk ramda --no-save
       - run:
-          name: Update DNS A record
+          name: Update AWS Route 53 DNS A record
           command: node aws/update-dns.js
 
 workflows:
