@@ -2,15 +2,9 @@
 
 set -euo pipefail
 
-if [ $# -ne 1 ]
-  then
-    echo "Usage: $0 tag"
-    exit 1
-fi
-
 DIR=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
 
-TAG=$1
+TAG=`git describe --always --dirty`
 
 STACK_NAME=simple-app
 

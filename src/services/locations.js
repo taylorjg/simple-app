@@ -3,6 +3,9 @@ import { formatAxiosError } from '../utils'
 
 export const search = async input => {
   try {
+    if (!input) {
+      return []
+    }
     const config = {
       params: {
         input
