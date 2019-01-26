@@ -19,5 +19,6 @@ exports.config = {
         displayStacktrace: true
       }
     }))
-  }
+  },
+  SELENIUM_PROMISE_MANAGER: false
 }
