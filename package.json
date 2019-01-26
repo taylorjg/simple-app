@@ -1,14 +1,20 @@
 {
   "name": "simple-app",
-  "version": "0.0.36",
+  "version": "0.0.37",
   "private": true,
   "dependencies": {
     "aws-sdk": "^2.388.0",
     "axios": "^0.18.0",
     "connect-history-api-fallback": "^1.6.0",
     "cookie-parser": "^1.4.3",
+    "jasmine-core": "^3.3.0",
+    "jasmine-spec-reporter": "^4.2.1",
+    "karma": "^4.0.0",
+    "karma-chrome-launcher": "^2.2.0",
+    "karma-jasmine": "^2.0.1",
     "loglevel": "^1.6.1",
     "morgan": "^1.9.1",
+    "protractor": "^5.4.2",
     "ramda": "^0.26.1",
     "react": "^16.7.0",
     "react-autocomplete": "^1.8.1",
@@ -28,6 +34,7 @@
     "start-node": "export $(cat .env | xargs); node ./server",
     "clean-server-public": "rm -rf ./server/public",
     "copy-to-server-public": "cp -r ./build ./server/public",
+    "e2e": "protractor ./e2e/protractor.conf.js",
     "heroku-postbuild": "npm run build && npm run copy-to-server-public"
   },
   "eslintConfig": {
