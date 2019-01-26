@@ -1,6 +1,6 @@
 {
   "name": "simple-app",
-  "version": "0.0.37",
+  "version": "0.0.38",
   "private": true,
   "dependencies": {
     "aws-sdk": "^2.388.0",
@@ -34,7 +34,7 @@
     "start-node": "export $(cat .env | xargs); node ./server",
     "clean-server-public": "rm -rf ./server/public",
     "copy-to-server-public": "cp -r ./build ./server/public",
-    "e2e": "protractor ./e2e/protractor.conf.js",
+    "e2e": "webdriver-manager update && protractor ./e2e/protractor.conf.js",
     "heroku-postbuild": "npm run build && npm run copy-to-server-public"
   },
   "eslintConfig": {
