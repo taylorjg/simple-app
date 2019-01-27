@@ -20,4 +20,16 @@ describe('WeatherView', () => {
       expect(await page.getVersion()).toMatch(new RegExp(`${version}$`))
     })
   })
+
+  describe('default weatherInfos', () => {
+    it('should display the correct locations', async () => {
+      await page.get()
+      await browser.sleep(2000)
+      const locations = await page.getWeatherInfoLocations()
+      expect(locations[0]).toBe('Weather in Manchester, GB')
+      expect(locations[1]).toBe('Weather in Edinburgh, GB')
+      expect(locations[2]).toBe('Weather in London, GB')
+      expect(locations[3]).toBe('Weather in Sydney, AU')
+    })
+  })
 })

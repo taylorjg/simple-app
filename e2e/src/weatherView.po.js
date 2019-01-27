@@ -1,4 +1,4 @@
-const { browser, by, element } = require('protractor')
+const { browser, $, $$ } = require('protractor')
 
 class WeatherViewPage {
 
@@ -7,7 +7,20 @@ class WeatherViewPage {
   }
 
   getVersion() {
-    return element(by.css('.version')).getText()
+    return $('.version').getText()
+  }
+
+  getWeatherInfos() {
+    return $$('.weather-info')
+  }
+
+  async getWeatherInfoLocations() {
+    const weatherInfos = await this.getWeatherInfos()
+    return Promise.all(
+      weatherInfos
+        .map(weatherInfo => weatherInfo.$('.weather-info__location'))
+        .map(location => location.getText())
+    )
   }
 }
 

@@ -7,10 +7,7 @@ exports.config = {
     './src/**/*.e2e-spec.js'
   ],
   baseUrl: 'http://localhost:3000/',
-  framework: 'jasmine',
   jasmineNodeOpts: {
-    showColors: true,
-    defaultTimeoutInterval: 30000,
     print: () => { }
   },
   onPrepare() {
