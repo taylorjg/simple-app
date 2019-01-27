@@ -39,7 +39,7 @@ echo SUBNETS: "$SUBNETS"
 
 aws cloudformation "$ACTION" \
   --stack-name "$STACK_NAME" \
-  --template-body file://"$DIR"/deploy-service.yaml \
+  --template-body file://"$DIR"/deploy-service-with-alb.yaml \
   --capabilities CAPABILITY_IAM \
   --parameters \
     ParameterKey=Subnets,ParameterValue=\""$SUBNETS"\" \

@@ -4,9 +4,7 @@ set -euo pipefail
 
 DIR=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
 
-TAG=`git describe --always`
-
-STACK_NAME=simple-app
+STACK_NAME="simple-app-infrastructure"
 
 if ! aws cloudformation describe-stacks --stack-name "$STACK_NAME" >/dev/null 2>&1
 then
@@ -37,12 +35,19 @@ SUBNETS=$(
 )
 echo SUBNETS: "$SUBNETS"
 
+ALB_LISTENER_CERTIFICATE=$(
+  aws acm list-certificates \
+    --output text \
+    --query "CertificateSummaryList[?DomainName=='simple-app-jt.com'].CertificateArn"
+)
+echo ALB_LISTENER_CERTIFICATE: "$ALB_LISTENER_CERTIFICATE"
+
 aws cloudformation "$ACTION" \
   --stack-name "$STACK_NAME" \
-  --template-body file://"$DIR"/deploy-service.yaml \
-  --capabilities CAPABILITY_IAM \
+  --template-body file://"$DIR"/deploy-infrastructure.yaml \
   --parameters \
+    ParameterKey=VPCId,ParameterValue="$VPC_ID" \
     ParameterKey=Subnets,ParameterValue=\""$SUBNETS"\" \
-    ParameterKey=Tag,ParameterValue="$TAG"
+    ParameterKey=ALBListenerCertificate,ParameterValue="$ALB_LISTENER_CERTIFICATE"
 
 aws cloudformation wait "$WAIT_CONDITION" --stack-name "$STACK_NAME"

@@ -4,7 +4,7 @@ set -euo pipefail
 
 DIR=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
 
-TAG=`git describe --always --dirty`
+TAG=`git describe --always`
 
 ACCOUNT=`aws sts get-caller-identity --output text --query "Account"`
 REGION="${AWS_DEFAULT_REGION}"
