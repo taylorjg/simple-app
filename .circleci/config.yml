@@ -23,22 +23,45 @@ jobs:
           background: true
       - run: npm run e2e
       - run: killall -QUIT node
-  deploy-job:
+
+  deploy-heroku-job:
+    docker:
+      - image: circleci/node:8.12
+    steps:
+      - checkout
+      - run:
+          name: Run setup script
+          command: bash .circleci/setup-heroku.sh
+      - add_ssh_keys:
+          fingerprints:
+            - "87:da:92:b5:bf:18:cd:06:58:25:64:de:2b:cf:93:b3"
+      - run:
+          name: Deploy master to Heroku
+          command: |
+            git push --force git@heroku.com:$HEROKU_APP_NAME.git HEAD:refs/heads/master
+            heroku restart -a $HEROKU_APP_NAME
+
+  deploy-aws-job:
     docker:
       - image: taylorjg/circleci-aws:v1
     steps:
       - checkout
-      # - run:
-      #     name: Run setup script
-      #     command: bash .circleci/setup-heroku.sh
-      # - add_ssh_keys:
-      #     fingerprints:
-      #       - "87:da:92:b5:bf:18:cd:06:58:25:64:de:2b:cf:93:b3"
-      # - run:
-      #     name: Deploy master to Heroku
-      #     command: |
-      #       git push --force git@heroku.com:$HEROKU_APP_NAME.git HEAD:refs/heads/master
-      #       heroku restart -a $HEROKU_APP_NAME
+      - setup_remote_docker
+      - run:
+          name: Build docker image and push to AWS ECR
+          command: aws/publish-image.sh
+      - run:
+          name: Create/Update AWS CloudFormation stack
+          command: aws/deploy-service.sh
+      - run:
+          name: Update AWS Route 53 DNS A record
+          command: node aws/update-dns.js
+
+  deploy-aws-with-alb-job:
+    docker:
+      - image: taylorjg/circleci-aws:v1
+    steps:
+      - checkout
       - setup_remote_docker
       - run:
           name: Build docker image and push to AWS ECR
@@ -46,19 +69,13 @@ jobs:
       - run:
           name: Create/Update AWS CloudFormation stack
           command: aws/deploy-service-with-alb.sh
-      # - run:
-      #     name: Create/Update AWS CloudFormation stack
-      #     command: aws/deploy-service.sh
-      # - run:
-      #     name: Update AWS Route 53 DNS A record
-      #     command: node aws/update-dns.js
 
 workflows:
   version: 2
   build-deploy:
     jobs:
       - build-job
-      - deploy-job:
+      - deploy-aws-with-alb-job:
           requires:
             - build-job
           filters:

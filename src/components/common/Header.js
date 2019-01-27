@@ -58,6 +58,7 @@ export const withHeader = ViewComponent => {
           />
           <ViewComponent
             showErrorMessage={this.showErrorMessage.bind(this)}
+            clearErrorMessage={this.clearErrorMessage.bind(this)}
             {...this.props}
           />
         </div>

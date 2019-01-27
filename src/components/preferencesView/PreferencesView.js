@@ -30,6 +30,7 @@ export class PreferencesView extends Component {
       this.setState({ searchValue })
       const matches = await search(searchValue)
       this.setState({ matches })
+      this.props.clearErrorMessage()
     } catch (error) {
       log.error(`[PreferencesView#onAutocompleteChange] ${error.message}`)
       this.setState({ matches: [] })
@@ -144,6 +145,7 @@ export class PreferencesView extends Component {
 
 PreferencesView.propTypes = {
   showErrorMessage: PropTypes.func.isRequired,
+  clearErrorMessage: PropTypes.func.isRequired,
   locations: PropTypes.arrayOf(PropTypes.object).isRequired,
   saveLocations: PropTypes.func.isRequired
 }

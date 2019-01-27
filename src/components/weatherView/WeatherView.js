@@ -93,6 +93,7 @@ export class WeatherView extends Component {
 
 WeatherView.propTypes = {
   showErrorMessage: PropTypes.func.isRequired,
+  clearErrorMessage: PropTypes.func.isRequired,
   locations: PropTypes.arrayOf(PropTypes.object).isRequired
 }
 

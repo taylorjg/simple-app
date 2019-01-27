@@ -2,7 +2,6 @@ import React, { Component } from 'react'
 import { BrowserRouter as Router, Route } from 'react-router-dom'
 import { WeatherViewWithHeader } from './components/weatherView/WeatherView'
 import { PreferencesViewWithHeader } from './components/preferencesView/PreferencesView'
-import { ProfileViewWithHeader } from './components/profileView/ProfileView'
 import { DEFAULT_LOCATIONS } from './defaultLocations'
 import { version } from '../package.json'
 import * as log from 'loglevel'
@@ -49,7 +48,6 @@ class App extends Component {
               locations={this.state.locations}
               saveLocations={this.saveLocations.bind(this)}
             />
-            <RouteWithProps path="/profile" exact component={ProfileViewWithHeader} />
             {/* TODO: default not found page ? */}
           </div>
         </Router>
