@@ -14,6 +14,14 @@ class WeatherViewPage {
     return $$('.weather-info')
   }
 
+  waitForWeatherInfoToLoad(timeout) {
+    const condition = async () => {
+      const weatherInfos = await $$('.weather-info img')
+      return weatherInfos.length > 0
+    }
+    return browser.wait(condition, timeout)
+  }
+
   async getWeatherInfoLocations() {
     const weatherInfos = await this.getWeatherInfos()
     return Promise.all(
