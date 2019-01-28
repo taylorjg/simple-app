@@ -11,10 +11,8 @@ export class WeatherView extends Component {
 
   constructor(props) {
     super(props)
-    this.locationIds = props.locations.map(location => location.id)
-    this.placeHolders = props.locations.map(location => ({ id: location.id }))
     this.state = {
-      weatherInfos: this.placeHolders,
+      weatherInfos: [],
       busy: false
     }
   }
@@ -24,6 +22,13 @@ export class WeatherView extends Component {
     this.getWeatherInfos()
   }
 
+  componentDidUpdate(prevProps) {
+    log.info(`[WeatherView#componentDidUpdate]`)
+    if (this.props.locations.length !== prevProps.locations.length) {
+      this.getWeatherInfos()
+    }
+  }
+
   componentDidCatch(error, info) {
     log.error(`[WeatherView#componentDidCatch] error: ${error}; info: ${info}`)
   }
@@ -31,8 +36,13 @@ export class WeatherView extends Component {
   async getWeatherInfos() {
     try {
       log.info(`[WeatherView#getWeatherInfos]`)
-      this.setState({ busy: true })
-      const weatherInfos = await getWeatherInfo(this.locationIds)
+      const locationIds = this.props.locations.map(location => location.id)
+      const placeHolders = this.props.locations.map(location => ({ id: location.id }))
+      this.setState({
+        weatherInfos: placeHolders,
+        busy: true
+      })
+      const weatherInfos = await getWeatherInfo(locationIds)
       this.setState({ weatherInfos })
     } catch (error) {
       log.error(`[WeatherView#getWeatherInfos] ${error.message}`)
@@ -72,7 +82,9 @@ export class WeatherView extends Component {
     return this.state.weatherInfos.map(weatherInfo =>
       this.state.busy
         ? <WeatherInfoLoader key={weatherInfo.id} />
-        : <WeatherInfo key={weatherInfo.id} {...weatherInfo} />)
+        : <WeatherInfo key={weatherInfo.id} {...weatherInfo}
+          onClose={this.props.removeLocation}
+        />)
   }
 
   render() {
@@ -94,7 +106,8 @@ export class WeatherView extends Component {
 WeatherView.propTypes = {
   showErrorMessage: PropTypes.func.isRequired,
   clearErrorMessage: PropTypes.func.isRequired,
-  locations: PropTypes.arrayOf(PropTypes.object).isRequired
+  locations: PropTypes.arrayOf(PropTypes.object).isRequired,
+  removeLocation: PropTypes.func.isRequired
 }
 
 export const WeatherViewWithHeader = withHeader(WeatherView)

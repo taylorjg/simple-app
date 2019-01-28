@@ -24,6 +24,7 @@ describe('WeatherView', () => {
   describe('default weatherInfos', () => {
     it('should display the correct locations', async () => {
       await page.get()
+      // TODO: use a custom wait here...
       await browser.sleep(2000)
       const locations = await page.getWeatherInfoLocations()
       expect(locations[0]).toBe('Weather in Manchester, GB')

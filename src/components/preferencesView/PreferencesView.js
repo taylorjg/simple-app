@@ -1,6 +1,5 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
-import * as R from 'ramda'
 import { withHeader } from '../common/Header'
 import { Location } from './Location'
 import { search } from '../../services/locations'
@@ -13,7 +12,6 @@ export class PreferencesView extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      locations: this.props.locations,
       searchValue: '',
       matches: [],
       selectedMatch: null
@@ -48,26 +46,20 @@ export class PreferencesView extends Component {
     }
   }
 
-  onAdd(e) {
-    e.preventDefault()
+  onAdd = e => {
     log.info(`[PreferencesView#onAdd] selectedMatch: ${JSON.stringify(this.state.selectedMatch)}`)
-    const newLocations = R.append(this.state.selectedMatch, this.state.locations)
+    e.preventDefault()
     this.setState({
-      locations: newLocations,
       searchValue: '',
       matches: [],
       selectedMatch: null
     })
-    this.props.saveLocations(newLocations)
+    this.props.addLocation(this.state.selectedMatch)
   }
 
-  onDelete(id) {
+  onDelete = id => {
     log.info(`[PreferencesView#onDelete] id: ${id}`)
-    const newLocations = R.reject(location => location.id === id, this.state.locations)
-    this.setState({
-      locations: newLocations
-    })
-    this.props.saveLocations(newLocations)
+    this.props.removeLocation(id)
   }
 
   renderItem(match, isHighlighted) {
@@ -80,11 +72,11 @@ export class PreferencesView extends Component {
   }
 
   renderLocations() {
-    return this.state.locations.map(location =>
+    return this.props.locations.map(location =>
       <Location
         key={location.id}
         location={location}
-        onDelete={this.onDelete.bind(this)}
+        onDelete={this.onDelete}
       />
     )
   }
@@ -122,7 +114,7 @@ export class PreferencesView extends Component {
         </div>
         <button type="submit" className="btn btn-xs btn-primary"
           disabled={!this.state.selectedMatch}
-          onClick={this.onAdd.bind(this)}>Add</button>
+          onClick={this.onAdd}>Add</button>
       </form>
     )
   }
@@ -147,7 +139,8 @@ PreferencesView.propTypes = {
   showErrorMessage: PropTypes.func.isRequired,
   clearErrorMessage: PropTypes.func.isRequired,
   locations: PropTypes.arrayOf(PropTypes.object).isRequired,
-  saveLocations: PropTypes.func.isRequired
+  addLocation: PropTypes.func.isRequired,
+  removeLocation: PropTypes.func.isRequired
 }
 
 export const PreferencesViewWithHeader = withHeader(PreferencesView)

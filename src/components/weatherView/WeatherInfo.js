@@ -5,6 +5,7 @@ import './WeatherInfo.css'
 
 export const WeatherInfo = props =>
   <div className="weather-info">
+    <span className="close" onClick={() => props.onClose(props.id)}>&times;</span>
     <h2 className="weather-info__location">
       {`Weather in ${props.location}`}
     </h2>
@@ -34,6 +35,7 @@ export const WeatherInfo = props =>
   </div>
 
 WeatherInfo.propTypes = {
+  id: PropTypes.number,
   location: PropTypes.string,
   country: PropTypes.string,
   city: PropTypes.string,
@@ -45,4 +47,5 @@ WeatherInfo.propTypes = {
   humidity: PropTypes.number,
   pressure: PropTypes.number,
   windSpeed: PropTypes.number,
+  onClose: PropTypes.func.isRequired
 }

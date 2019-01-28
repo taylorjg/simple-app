@@ -7,7 +7,10 @@ const configureRouter = (apiKey, exposeErrorDetails) => {
 
   const getWeatherInfo = async (req, res) => {
     try {
-      const ids = req.params.ids.split(',').map(s => s.trim())
+      const idsQueryParam = req.query['ids'] || ''
+      const ids = idsQueryParam.split(',')
+        .map(s => s.trim())
+        .filter(s => !!s)
       console.log(`[api.weatherInfo.getWeatherInfo] ids: ${ids.join(',')}`)
       const results = await service.getWeatherInfo(ids)
       res.json(results)
@@ -18,7 +21,7 @@ const configureRouter = (apiKey, exposeErrorDetails) => {
   }
 
   const router = express.Router()
-  router.get('/weatherInfo/:ids', getWeatherInfo)
+  router.get('/weatherInfo', getWeatherInfo)
 
   return router
 }

@@ -12,8 +12,15 @@ const configureService = (apiKey, exposeErrorDetails) => {
     units: 'metric'
   }
 
+  const EMPTY_WEATHER_INFO_RESULTS = {
+    success: {
+      results: []
+    }
+  }
+
   const getWeatherInfo = async ids => {
     try {
+      if (ids.length === 0) return EMPTY_WEATHER_INFO_RESULTS
       const url = `/data/2.5/group`
       const config = configWithAdditionalParams({
         id: ids.join(',')

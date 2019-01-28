@@ -4,6 +4,7 @@ import { WeatherViewWithHeader } from './components/weatherView/WeatherView'
 import { PreferencesViewWithHeader } from './components/preferencesView/PreferencesView'
 import { DEFAULT_LOCATIONS } from './defaultLocations'
 import { version } from '../package.json'
+import * as R from 'ramda'
 import * as log from 'loglevel'
 import './App.css'
 
@@ -21,10 +22,19 @@ class App extends Component {
     }
   }
 
-  saveLocations(locations) {
-    log.info(`[App#saveLocations]`)
+  addLocation(location) {
+    log.info(`[App#addLocation] location: ${JSON.stringify(location)}`)
+    const newLocations = R.append(location, this.state.locations)
     this.setState({
-      locations
+      locations: newLocations
+    })
+  }
+
+  removeLocation(id) {
+    log.info(`[App#removeLocation] id: ${id}`)
+    const newLocations = R.reject(location => location.id === id, this.state.locations)
+    this.setState({
+      locations: newLocations
     })
   }
 
@@ -43,10 +53,12 @@ class App extends Component {
           <div>
             <RouteWithProps path={['/', '/index.html']} exact component={WeatherViewWithHeader}
               locations={this.state.locations}
+              removeLocation={this.removeLocation.bind(this)}
             />
             <RouteWithProps path="/preferences" exact component={PreferencesViewWithHeader}
               locations={this.state.locations}
-              saveLocations={this.saveLocations.bind(this)}
+              addLocation={this.addLocation.bind(this)}
+              removeLocation={this.removeLocation.bind(this)}
             />
             {/* TODO: default not found page ? */}
           </div>

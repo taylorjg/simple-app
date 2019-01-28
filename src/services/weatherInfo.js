@@ -5,7 +5,13 @@ class AppError extends Error {}
 
 export const getWeatherInfo = async ids => {
   try {
-    const response = await axios.get(`/api/weatherInfo/${ids.join(',')}`)
+    const config = {
+      params: {
+        ids: ids.join(',')
+      }
+    }
+    // const response = await axios.get(`/api/weatherInfo/${ids.join(',')}`)
+    const response = await axios.get('/api/weatherInfo', config)
     const result = response.data
     if (result.success) {
       return result.success.results
