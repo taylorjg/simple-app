@@ -54,6 +54,13 @@ export class PreferencesView extends Component {
       matches: [],
       selectedMatch: null
     })
+    const existingLocation =
+      this.props.locations.find(location =>
+        location.id === this.state.selectedMatch.id)
+    if (existingLocation) {
+      this.props.showErrorMessage(`Duplicate location, "${this.state.selectedMatch.location}".`)
+      return
+    }
     this.props.addLocation(this.state.selectedMatch)
   }
 
