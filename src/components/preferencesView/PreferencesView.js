@@ -3,7 +3,7 @@ import PropTypes from 'prop-types'
 import { withHeader } from '../common/Header'
 import { Location } from './Location'
 import { search } from '../../services/locations'
-import Autocomplete from 'react-autocomplete'
+import { AsyncTypeahead } from 'react-bootstrap-typeahead'
 import * as log from 'loglevel'
 import './PreferencesView.css'
 
@@ -12,9 +12,9 @@ export class PreferencesView extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      searchValue: '',
-      matches: [],
-      selectedMatch: null
+      busy: false,
+      cityMatches: [],
+      selectedLocation: null
     }
   }
 
@@ -22,46 +22,46 @@ export class PreferencesView extends Component {
     log.error(`[PreferencesView#componentDidCatch] error: ${error}; info: ${info}`)
   }
 
-  onAutocompleteChange = async (_, searchValue) => {
+  onCitySearch = async searchValue => {
     try {
       log.info(`[PreferencesView#onAutocompleteChange] searchValue: ${searchValue}`)
-      this.setState({ searchValue })
-      const matches = await search(searchValue)
-      this.setState({ matches })
+      this.setState({ busy: true, searchValue })
+      const cityMatches = await search(searchValue)
+      this.setState({ cityMatches })
       this.props.clearErrorMessage()
     } catch (error) {
       log.error(`[PreferencesView#onAutocompleteChange] ${error.message}`)
-      this.setState({ matches: [] })
+      this.setState({ cityMatches: [] })
       this.props.showErrorMessage(error.message)
+    } finally {
+      this.setState({ busy: false })
     }
   }
 
-  onAutocompleteSelect = (searchValue, selectedMatch) => {
-    log.info(`[PreferencesView#onAutocompleteSelect] searchValue: ${searchValue}; selectedMatch: ${JSON.stringify(selectedMatch)}`)
-    if (selectedMatch.city && selectedMatch.country) {
-      this.setState({
-        searchValue,
-        selectedMatch
-      })
-    }
+  onCityChange = selectedItems => {
+    log.info(`[PreferencesView#onAutocompleteSelect] selectedItems: ${JSON.stringify(selectedItems)}`)
+    const selectedLocation = selectedItems[0]
+    this.setState({
+      selectedLocation
+    })
   }
 
   onAdd = e => {
-    log.info(`[PreferencesView#onAdd] selectedMatch: ${JSON.stringify(this.state.selectedMatch)}`)
+    log.info(`[PreferencesView#onAdd] selectedLocation: ${JSON.stringify(this.state.selectedLocation)}`)
     e.preventDefault()
     this.setState({
-      searchValue: '',
-      matches: [],
-      selectedMatch: null
+      cityMatches: [],
+      selectedLocation: null
     })
+    this.cityTypeahead.getInstance().clear()
     const existingLocation =
       this.props.locations.find(location =>
-        location.id === this.state.selectedMatch.id)
+        location.id === this.state.selectedLocation.id)
     if (existingLocation) {
-      this.props.showErrorMessage(`Duplicate location, "${this.state.selectedMatch.location}".`)
+      this.props.showErrorMessage(`Duplicate location, "${this.state.selectedLocation.location}".`)
       return
     }
-    this.props.addLocation(this.state.selectedMatch)
+    this.props.addLocation(this.state.selectedLocation)
   }
 
   onDelete = id => {
@@ -90,37 +90,23 @@ export class PreferencesView extends Component {
 
   renderForm() {
 
-    // https://github.com/reactjs/react-autocomplete/issues/282#issuecomment-335477132
-    const menuStyle = {
-      borderRadius: '3px',
-      boxShadow: '0 2px 12px rgba(0, 0, 0, 0.1)',
-      background: 'rgba(255, 255, 255, 1)',
-      padding: '2px 0',
-      fontSize: '90%',
-      position: 'fixed',
-      overflow: 'auto',
-      maxHeight: '50%',
-      zIndex: 100
-    }
-
     return (
       <form>
         <div className="form-group form-group-sm">
           <label htmlFor="search">Search for a city:</label>
-          <Autocomplete
-            inputProps={{ id: 'search', className: 'form-control form-control-sm' }}
-            wrapperStyle={{ display: 'block' }}
-            value={this.state.searchValue}
-            items={this.state.matches}
-            getItemValue={match => match.city}
-            onChange={this.onAutocompleteChange}
-            onSelect={this.onAutocompleteSelect}
-            renderItem={this.renderItem}
-            menuStyle={menuStyle}
+          <AsyncTypeahead
+            ref={cityTypeahead => this.cityTypeahead = cityTypeahead}
+            bsSize="sm"
+            isLoading={this.state.busy}
+            onSearch={this.onCitySearch}
+            onChange={this.onCityChange}
+            filterBy={['city']}
+            labelKey='location'
+            options={this.state.cityMatches}
           />
         </div>
         <button type="submit" className="btn btn-xs btn-primary"
-          disabled={!this.state.selectedMatch}
+          disabled={!this.state.selectedLocation}
           onClick={this.onAdd}>Add</button>
       </form>
     )
