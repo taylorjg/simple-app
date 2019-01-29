@@ -22,7 +22,7 @@ export class PreferencesView extends Component {
     log.error(`[PreferencesView#componentDidCatch] error: ${error}; info: ${info}`)
   }
 
-  async onAutocompleteChange(_, searchValue) {
+  onAutocompleteChange = async (_, searchValue) => {
     try {
       log.info(`[PreferencesView#onAutocompleteChange] searchValue: ${searchValue}`)
       this.setState({ searchValue })
@@ -36,7 +36,7 @@ export class PreferencesView extends Component {
     }
   }
 
-  onAutocompleteSelect(searchValue, selectedMatch) {
+  onAutocompleteSelect = (searchValue, selectedMatch) => {
     log.info(`[PreferencesView#onAutocompleteSelect] searchValue: ${searchValue}; selectedMatch: ${JSON.stringify(selectedMatch)}`)
     if (selectedMatch.city && selectedMatch.country) {
       this.setState({
@@ -69,7 +69,7 @@ export class PreferencesView extends Component {
     this.props.removeLocation(id)
   }
 
-  renderItem(match, isHighlighted) {
+  renderItem = (match, isHighlighted) => {
     const className = isHighlighted ? 'bg-primary' : ''
     return (
       <div key={match.id} className={className}>
@@ -113,9 +113,9 @@ export class PreferencesView extends Component {
             value={this.state.searchValue}
             items={this.state.matches}
             getItemValue={match => match.city}
-            onChange={this.onAutocompleteChange.bind(this)}
-            onSelect={this.onAutocompleteSelect.bind(this)}
-            renderItem={this.renderItem.bind(this)}
+            onChange={this.onAutocompleteChange}
+            onSelect={this.onAutocompleteSelect}
+            renderItem={this.renderItem}
             menuStyle={menuStyle}
           />
         </div>

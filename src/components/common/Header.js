@@ -37,16 +37,16 @@ export const withHeader = ViewComponent => {
     constructor(props) {
       super(props)
       this.state = {
-        errorMessage: null
+        errorMessage: ''
       }
     }
 
-    showErrorMessage(errorMessage) {
+    showErrorMessage = errorMessage => {
       this.setState({ errorMessage })
     }
 
-    clearErrorMessage() {
-      this.setState({ errorMessage: null })
+    clearErrorMessage = () => {
+      this.setState({ errorMessage: '' })
     }
 
     render() {
@@ -54,11 +54,11 @@ export const withHeader = ViewComponent => {
         <div>
           <Header
             errorMessage={this.state.errorMessage}
-            clearErrorMessage={this.clearErrorMessage.bind(this)}
+            clearErrorMessage={this.clearErrorMessage}
           />
           <ViewComponent
-            showErrorMessage={this.showErrorMessage.bind(this)}
-            clearErrorMessage={this.clearErrorMessage.bind(this)}
+            showErrorMessage={this.showErrorMessage}
+            clearErrorMessage={this.clearErrorMessage}
             {...this.props}
           />
         </div>

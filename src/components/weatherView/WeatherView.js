@@ -55,7 +55,7 @@ export class WeatherView extends Component {
     }
   }
 
-  onRefresh() {
+  onRefresh = () => {
     log.info(`[WeatherView#onRefresh]`)
     this.getWeatherInfos()
   }
@@ -69,7 +69,7 @@ export class WeatherView extends Component {
         }
         <span className="btn btn-xs btn-success" title="Refresh"
           disabled={this.state.busy}
-          onClick={this.onRefresh.bind(this)}
+          onClick={this.onRefresh}
         >
           <i className="fas fa-redo"></i>
         </span>

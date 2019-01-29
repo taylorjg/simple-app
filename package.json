@@ -1,6 +1,6 @@
 {
   "name": "simple-app",
-  "version": "0.0.46",
+  "version": "0.0.47",
   "private": true,
   "dependencies": {
     "aws-sdk": "^2.395.0",

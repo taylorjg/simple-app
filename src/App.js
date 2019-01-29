@@ -22,7 +22,7 @@ class App extends Component {
     }
   }
 
-  addLocation(location) {
+  addLocation = location => {
     log.info(`[App#addLocation] location: ${JSON.stringify(location)}`)
     const newLocations = R.append(location, this.state.locations)
     this.setState({
@@ -30,7 +30,7 @@ class App extends Component {
     })
   }
 
-  removeLocation(id) {
+  removeLocation = id => {
     log.info(`[App#removeLocation] id: ${id}`)
     const newLocations = R.reject(location => location.id === id, this.state.locations)
     this.setState({
@@ -53,12 +53,12 @@ class App extends Component {
           <div>
             <RouteWithProps path={['/', '/index.html']} exact component={WeatherViewWithHeader}
               locations={this.state.locations}
-              removeLocation={this.removeLocation.bind(this)}
+              removeLocation={this.removeLocation}
             />
             <RouteWithProps path="/preferences" exact component={PreferencesViewWithHeader}
               locations={this.state.locations}
-              addLocation={this.addLocation.bind(this)}
-              removeLocation={this.removeLocation.bind(this)}
+              addLocation={this.addLocation}
+              removeLocation={this.removeLocation}
             />
             {/* TODO: default not found page ? */}
           </div>
