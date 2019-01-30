@@ -4,7 +4,6 @@ const history = require('connect-history-api-fallback')
 const cookieParser = require('cookie-parser')
 const weatherInfoApi = require('./api/weatherInfo')
 const locationsApi = require('./api/locations')
-const preferencesApi = require('./api/preferences')
 
 const PORT = process.env.PORT || 3001
 const OPEN_WEATHER_API_KEY = process.env.OPEN_WEATHER_API_KEY
@@ -19,12 +18,11 @@ app.use('/', express.static(publicFolder))
 
 const weatherInfoApiRouter = weatherInfoApi.configureRouter(OPEN_WEATHER_API_KEY, EXPOSE_ERROR_DETAILS)
 const locationsApiRouter = locationsApi.router
-const preferencesApiRouter = preferencesApi.router
 
 const apiRouters = [
   weatherInfoApiRouter,
-  locationsApiRouter,
-  preferencesApiRouter]
+  locationsApiRouter
+]
 
 app.use('/api', apiRouters)
 

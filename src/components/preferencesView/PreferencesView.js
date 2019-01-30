@@ -7,13 +7,89 @@ import { AsyncTypeahead } from 'react-bootstrap-typeahead'
 import * as log from 'loglevel'
 import './PreferencesView.css'
 
+const COUNTRIES = [
+  {
+    name: 'Australia',
+    code: 'AU'
+  },
+  {
+    name: 'Austria',
+    code: 'AT'
+  },
+  {
+    name: 'Belgium',
+    code: 'BE'
+  },
+  {
+    name: 'Brazil',
+    code: 'BR'
+  },
+  {
+    name: 'Czech Republic',
+    code: 'CZ'
+  },
+  {
+    name: 'Denmark',
+    code: 'DK'
+  },
+  {
+    name: 'Finland',
+    code: 'FI'
+  },
+  {
+    name: 'France',
+    code: 'FR'
+  },
+  {
+    name: 'Germany',
+    code: 'DE'
+  },
+  {
+    name: 'Italy',
+    code: 'IT'
+  },
+  {
+    name: 'Ireland',
+    code: 'IE'
+  },
+  {
+    name: 'Netherlands',
+    code: 'NL'
+  },
+  {
+    name: 'Poland',
+    code: 'PL'
+  },
+  {
+    name: 'Portugal',
+    code: 'PT'
+  },
+  {
+    name: 'Spain',
+    code: 'ES'
+  },
+  {
+    name: 'Switzerland',
+    code: 'CH'
+  },
+  {
+    name: 'United Kingdom',
+    code: 'GB'
+  },
+  {
+    name: 'United States of America',
+    code: 'US'
+  }
+]
+
 export class PreferencesView extends Component {
 
   constructor(props) {
     super(props)
     this.state = {
       busy: false,
-      cityMatches: [],
+      selectedCountry: 'GB',
+      matchingLocations: [],
       selectedLocation: null
     }
   }
@@ -22,16 +98,23 @@ export class PreferencesView extends Component {
     log.error(`[PreferencesView#componentDidCatch] error: ${error}; info: ${info}`)
   }
 
-  onCitySearch = async searchValue => {
+  onCountryChange = e => {
+    const selectedCountry = e.target.value
+    log.info(`[PreferencesView#onCountryChange] selectedCountry: ${selectedCountry}`)
+    this.setState({ selectedCountry })
+    if (!selectedCountry) this.clearCity()
+  }
+
+  onCitySearch = async input => {
     try {
-      log.info(`[PreferencesView#onAutocompleteChange] searchValue: ${searchValue}`)
-      this.setState({ busy: true, searchValue })
-      const cityMatches = await search(searchValue)
-      this.setState({ cityMatches })
+      log.info(`[PreferencesView#onCitySearch] input: ${input}`)
+      this.setState({ busy: true })
+      const matchingLocations = await search(input, this.state.selectedCountry)
+      this.setState({ matchingLocations })
       this.props.clearErrorMessage()
     } catch (error) {
-      log.error(`[PreferencesView#onAutocompleteChange] ${error.message}`)
-      this.setState({ cityMatches: [] })
+      log.error(`[PreferencesView#onCitySearch] ${error.message}`)
+      this.setState({ matchingLocations: [] })
       this.props.showErrorMessage(error.message)
     } finally {
       this.setState({ busy: false })
@@ -39,21 +122,23 @@ export class PreferencesView extends Component {
   }
 
   onCityChange = selectedItems => {
-    log.info(`[PreferencesView#onAutocompleteSelect] selectedItems: ${JSON.stringify(selectedItems)}`)
+    log.info(`[PreferencesView#onCityChange] selectedItems: ${JSON.stringify(selectedItems)}`)
     const selectedLocation = selectedItems[0]
+    this.setState({ selectedLocation })
+  }
+
+  clearCity = () => {
     this.setState({
-      selectedLocation
+      matchingLocations: [],
+      selectedLocation: null
     })
+    this.cityTypeahead.getInstance().clear()
   }
 
   onAdd = e => {
     log.info(`[PreferencesView#onAdd] selectedLocation: ${JSON.stringify(this.state.selectedLocation)}`)
     e.preventDefault()
-    this.setState({
-      cityMatches: [],
-      selectedLocation: null
-    })
-    this.cityTypeahead.getInstance().clear()
+    this.clearCity()
     const existingLocation =
       this.props.locations.find(location =>
         location.id === this.state.selectedLocation.id)
@@ -88,21 +173,37 @@ export class PreferencesView extends Component {
     )
   }
 
-  renderForm() {
+  renderCountry(country) {
+    return (
+      <option key={country.code} value={country.code}>
+        {country.name}
+      </option>
+    )
+  }
 
+  renderForm() {
     return (
       <form>
         <div className="form-group form-group-sm">
-          <label htmlFor="search">Search for a city:</label>
+          <label htmlFor="country">Select a country:</label>
+          <select id="country" className="form-control form-control-sm"
+            onChange={this.onCountryChange} defaultValue={this.state.selectedCountry}
+          >
+            {COUNTRIES.map(country => this.renderCountry(country))}
+          </select>
+        </div>
+        <div className="form-group form-group-sm">
+          <label htmlFor="city">Search for a city:</label>
           <AsyncTypeahead
+            inputProps={{ id: 'city' }}
             ref={cityTypeahead => this.cityTypeahead = cityTypeahead}
             bsSize="sm"
+            disabled={!this.state.selectedCountry}
             isLoading={this.state.busy}
             onSearch={this.onCitySearch}
             onChange={this.onCityChange}
-            filterBy={['city']}
-            labelKey='location'
-            options={this.state.cityMatches}
+            labelKey='city'
+            options={this.state.matchingLocations}
           />
         </div>
         <button type="submit" className="btn btn-xs btn-primary"

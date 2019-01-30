@@ -3,9 +3,9 @@ const service = require('../services/locations')
 
 const search = (req, res) => {
   try {
-    const input = req.query['input']
-    console.log(`[api.locations.search] input: ${input}`)
-    const results = service.search(input)
+    const { input, country } = req.query
+    console.log(`[api.locations.search] input: ${input}; country: ${country}`)
+    const results = service.search(input, country)
     res.json(results)
   } catch (error) {
     console.log(`[api.locations.search] ${error}`)

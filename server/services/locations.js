@@ -14,15 +14,12 @@ const locations =
     R.uniqBy(entry => entry.location)
   )(cityList)
 
-const search = input => {
+const search = (input, country) => {
   const lowercaseInput = input.toLowerCase()
   return R.pipe(
-    R.filter(entry => entry.lowercaseCity.includes(lowercaseInput)),
-    R.sortWith([
-      R.ascend(entry => entry.city.length),
-      R.ascend(entry => entry.country)
-    ]),
-    R.take(5)
+    R.filter(entry => entry.lowercaseCity.includes(lowercaseInput) && entry.country === country),
+    R.sort(R.ascend(entry => entry.city)),
+    R.take(20)
   )(locations)
 }
 

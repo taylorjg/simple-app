@@ -1,14 +1,13 @@
 import axios from 'axios'
 import { formatAxiosError } from '../utils'
 
-export const search = async input => {
+export const search = async (input, country) => {
   try {
-    if (!input) {
-      return []
-    }
+    if (!input) return []
     const config = {
       params: {
-        input
+        input,
+        country
       }
     }
     const response = await axios.get('/api/search', config)

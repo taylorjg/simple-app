@@ -7,7 +7,7 @@ const configureRouter = (apiKey, exposeErrorDetails) => {
 
   const getWeatherInfo = async (req, res) => {
     try {
-      const idsQueryParam = req.query['ids'] || ''
+      const { ids: idsQueryParam = '' } = req.query
       const ids = idsQueryParam.split(',')
         .map(s => s.trim())
         .filter(s => !!s)
