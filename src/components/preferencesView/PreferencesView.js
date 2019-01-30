@@ -3,84 +3,10 @@ import PropTypes from 'prop-types'
 import { withHeader } from '../common/Header'
 import { Location } from './Location'
 import { search } from '../../services/locations'
-import { AsyncTypeahead } from 'react-bootstrap-typeahead'
+import { Typeahead, AsyncTypeahead } from 'react-bootstrap-typeahead'
+import { countries, defaultCountry } from './countries'
 import * as log from 'loglevel'
 import './PreferencesView.css'
-
-const COUNTRIES = [
-  {
-    name: 'Australia',
-    code: 'AU'
-  },
-  {
-    name: 'Austria',
-    code: 'AT'
-  },
-  {
-    name: 'Belgium',
-    code: 'BE'
-  },
-  {
-    name: 'Brazil',
-    code: 'BR'
-  },
-  {
-    name: 'Czech Republic',
-    code: 'CZ'
-  },
-  {
-    name: 'Denmark',
-    code: 'DK'
-  },
-  {
-    name: 'Finland',
-    code: 'FI'
-  },
-  {
-    name: 'France',
-    code: 'FR'
-  },
-  {
-    name: 'Germany',
-    code: 'DE'
-  },
-  {
-    name: 'Italy',
-    code: 'IT'
-  },
-  {
-    name: 'Ireland',
-    code: 'IE'
-  },
-  {
-    name: 'Netherlands',
-    code: 'NL'
-  },
-  {
-    name: 'Poland',
-    code: 'PL'
-  },
-  {
-    name: 'Portugal',
-    code: 'PT'
-  },
-  {
-    name: 'Spain',
-    code: 'ES'
-  },
-  {
-    name: 'Switzerland',
-    code: 'CH'
-  },
-  {
-    name: 'United Kingdom',
-    code: 'GB'
-  },
-  {
-    name: 'United States of America',
-    code: 'US'
-  }
-]
 
 export class PreferencesView extends Component {
 
@@ -88,7 +14,8 @@ export class PreferencesView extends Component {
     super(props)
     this.state = {
       busy: false,
-      selectedCountry: 'GB',
+      matchingCountries: [],
+      selectedCountry: defaultCountry,
       matchingLocations: [],
       selectedLocation: null
     }
@@ -98,18 +25,17 @@ export class PreferencesView extends Component {
     log.error(`[PreferencesView#componentDidCatch] error: ${error}; info: ${info}`)
   }
 
-  onCountryChange = e => {
-    const selectedCountry = e.target.value
-    log.info(`[PreferencesView#onCountryChange] selectedCountry: ${selectedCountry}`)
+  onCountryChange = async selectedItems => {
+    log.info(`[PreferencesView#onCountryChange] selectedItems: ${JSON.stringify(selectedItems)}`)
+    const selectedCountry = selectedItems[0]
     this.setState({ selectedCountry })
-    if (!selectedCountry) this.clearCity()
   }
 
   onCitySearch = async input => {
     try {
       log.info(`[PreferencesView#onCitySearch] input: ${input}`)
       this.setState({ busy: true })
-      const matchingLocations = await search(input, this.state.selectedCountry)
+      const matchingLocations = await search(input, this.state.selectedCountry.code)
       this.setState({ matchingLocations })
       this.props.clearErrorMessage()
     } catch (error) {
@@ -154,15 +80,6 @@ export class PreferencesView extends Component {
     this.props.removeLocation(id)
   }
 
-  renderItem = (match, isHighlighted) => {
-    const className = isHighlighted ? 'bg-primary' : ''
-    return (
-      <div key={match.id} className={className}>
-        {match.location}
-      </div>
-    )
-  }
-
   renderLocations() {
     return this.props.locations.map(location =>
       <Location
@@ -173,30 +90,26 @@ export class PreferencesView extends Component {
     )
   }
 
-  renderCountry(country) {
-    return (
-      <option key={country.code} value={country.code}>
-        {country.name}
-      </option>
-    )
-  }
-
   renderForm() {
     return (
       <form>
         <div className="form-group form-group-sm">
-          <label htmlFor="country">Select a country:</label>
-          <select id="country" className="form-control form-control-sm"
-            onChange={this.onCountryChange} defaultValue={this.state.selectedCountry}
-          >
-            {COUNTRIES.map(country => this.renderCountry(country))}
-          </select>
+          <label htmlFor="country">Search for a country:</label>
+          <Typeahead
+            ref={countryTypeahead => this.countryTypeahead = countryTypeahead}
+            inputProps={{ id: 'country' }}
+            bsSize="sm"
+            onChange={this.onCountryChange}
+            labelKey='name'
+            options={countries}
+            defaultSelected={[defaultCountry]}
+          />
         </div>
         <div className="form-group form-group-sm">
           <label htmlFor="city">Search for a city:</label>
           <AsyncTypeahead
-            inputProps={{ id: 'city' }}
             ref={cityTypeahead => this.cityTypeahead = cityTypeahead}
+            inputProps={{ id: 'city' }}
             bsSize="sm"
             disabled={!this.state.selectedCountry}
             isLoading={this.state.busy}
