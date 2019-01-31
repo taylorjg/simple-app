@@ -51,11 +51,11 @@ jobs:
           name: Build docker image and push to AWS ECR
           command: aws/publish-image.sh
       - run:
-          name: Create/Update AWS CloudFormation stack
+          name: Create/update AWS CloudFormation stack
           command: aws/deploy-service.sh
       - run:
-          name: Update AWS Route 53 DNS A record
-          command: node aws/update-dns.js
+          name: Create/update AWS Route 53 DNS A record
+          command: node aws/manage-dns.js
 
   deploy-aws-with-alb-job:
     docker:
@@ -67,7 +67,7 @@ jobs:
           name: Build docker image and push to AWS ECR
           command: aws/publish-image.sh
       - run:
-          name: Create/Update AWS CloudFormation stack
+          name: Create/update AWS CloudFormation stack
           command: aws/deploy-service-with-alb.sh
 
 workflows:
