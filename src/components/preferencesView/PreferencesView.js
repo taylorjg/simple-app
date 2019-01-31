@@ -61,6 +61,17 @@ export class PreferencesView extends Component {
     this.cityTypeahead.getInstance().clear()
   }
 
+  onClear = () => {
+    this.setState({
+      matchingCountries: [],
+      selectedCountry: null,
+      matchingLocations: [],
+      selectedLocation: null
+    })
+    this.countryTypeahead.getInstance().clear()
+    this.cityTypeahead.getInstance().clear()
+  }
+
   onAdd = e => {
     log.info(`[PreferencesView#onAdd] selectedLocation: ${JSON.stringify(this.state.selectedLocation)}`)
     e.preventDefault()
@@ -122,6 +133,9 @@ export class PreferencesView extends Component {
         <button type="submit" className="btn btn-xs btn-primary"
           disabled={!this.state.selectedLocation}
           onClick={this.onAdd}>Add</button>
+        <button type="button" className="btn btn-xs btn-default"
+          disabled={!this.state.selectedCountry && !this.state.selectedLocation}
+          onClick={this.onClear}>Clear</button>
       </form>
     )
   }

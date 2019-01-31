@@ -2,3 +2,7 @@ form {
   margin-top: 20px;
   margin-bottom: 25px;
 }
+
+form button {
+  margin-right: 5px;
+}
