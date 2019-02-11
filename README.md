@@ -42,6 +42,18 @@ The idea of this repo is to build a simple application complete with:
 # Things still to do
 
 * Remember preferences in local storage
+* Caching
+    * Client-side
+    * Server-side
+* Add more unit tests
+* Add more end to end tests
+* Add a favicon
+* Create a reusable HOC re component loading
+* Units: Centrigrade/Fahrenheit
+* Improve UI responsiveness
+* [A11y](https://a11yproject.com/)
+* Click weather info widget to flip it and show weather forecast
+* Add Redux
 
 # Notes on things already done
 

@@ -75,7 +75,7 @@ workflows:
   build-deploy:
     jobs:
       - build-job
-      - deploy-aws-with-alb-job:
+      - deploy-heroku-job:
           requires:
             - build-job
           filters:

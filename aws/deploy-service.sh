@@ -5,6 +5,7 @@ set -euo pipefail
 DIR=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
 
 TAG=`git describe --always`
+echo TAG: "$TAG"
 
 STACK_NAME=simple-app
 
