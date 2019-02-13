@@ -7,26 +7,39 @@
 }
 
 .weather-info__location {
+  display: inline-block;
   font-size: large;
-}
-
-.weather-info__temp-range {
-  font-size: x-small;
+  margin-bottom: 3px;
 }
 
 .weather-info__temperature {
   font-size: large;
+  margin-bottom: 3px;
+}
+
+.weather-info__temperature img {
+  width: 50px;
+  height: 50px;
+  margin-right: 5px;
+}
+
+.weather-info__temp-range {
+  font-size: x-small;
+  margin-left: 5px;
 }
 
 .weather-info__description {
   font-size: medium;
+  margin-bottom: 3px;
 }
 
 .weatherInfo__list {
+  display: inline-block;
   list-style: none;
   padding-left: 0;
 }
 
 .weatherInfo__list-item {
   font-size: small;
+  margin-bottom: 2px;
 }

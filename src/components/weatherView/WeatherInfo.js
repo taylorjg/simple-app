@@ -6,21 +6,19 @@ import './WeatherInfo.css'
 export const WeatherInfo = props =>
   <div className="weather-info">
     <span className="close" onClick={() => props.onClose(props.id)}>&times;</span>
-    <h2 className="weather-info__location">
+    <div className="weather-info__location">
       {`Weather in ${props.location}`}
-    </h2>
-    <h3 className="weather-info__temperature">
+    </div>
+    <div className="weather-info__temperature">
       <img src={props.imageUrl} alt={`Weather in ${props.location}`}></img>
-      &nbsp;
-      {props.currentTemp} &deg;C
-      &nbsp;
+      <span>{props.currentTemp} &deg;C</span>
       <span className="weather-info__temp-range">
         (min: {props.minTemp} &deg;C, max: {props.maxTemp} &deg;C)
       </span>
-    </h3>
-    <p className="weather-info__description">
+    </div>
+    <div className="weather-info__description">
       {sentenceCase(props.description)}
-    </p>
+    </div>
     <ul className="weatherInfo__list">
       <li className="weatherInfo__list-item">
         Humidity: {props.humidity}%

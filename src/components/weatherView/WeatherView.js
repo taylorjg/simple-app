@@ -2,10 +2,27 @@ import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import { withHeader } from '../common/Header'
 import { WeatherInfo } from './WeatherInfo'
-import { WeatherInfoLoader } from './loaders/WeatherInfoLoader'
+import { withLoader } from '../common/Loader'
 import { getWeatherInfo } from '../../services/weatherInfo'
 import * as log from 'loglevel'
 import './WeatherView.css'
+
+const PLACEHOLDER = {
+  id: 2643123,
+  location: 'Manchester, GB',
+  country: 'GB',
+  city: 'Manchester',
+  description: 'Scattered clouds',
+  imageUrl: 'https://openweathermap.org/img/w/03d.png',
+  currentTemp: 0,
+  minTemp: 0,
+  maxTemp: 0,
+  humidity: 100,
+  pressure: 1030,
+  windSpeed: 2
+}
+
+const WeatherInfoWithLoader = withLoader(WeatherInfo)
 
 export class WeatherView extends Component {
 
@@ -79,12 +96,14 @@ export class WeatherView extends Component {
 
   renderWeatherInfos() {
     log.info(`[WeatherView#renderWeatherInfos]`)
-    return this.state.weatherInfos.map(weatherInfo =>
-      this.state.busy
-        ? <WeatherInfoLoader key={weatherInfo.id} />
-        : <WeatherInfo key={weatherInfo.id} {...weatherInfo}
-          onClose={this.props.removeLocation}
-        />)
+    return this.state.weatherInfos.map((weatherInfo, index) =>
+      <WeatherInfoWithLoader
+        isLoading={this.state.busy}
+        key={index}
+        {...(this.state.busy ? PLACEHOLDER : weatherInfo)}
+        onClose={this.props.removeLocation}
+      />
+    )
   }
 
   render() {
