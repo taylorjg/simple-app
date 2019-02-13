@@ -15,10 +15,8 @@ class WeatherViewPage {
   }
 
   waitForWeatherInfoToLoad(timeout) {
-    const condition = async () => {
-      const weatherInfos = await $$('.weather-info img')
-      return weatherInfos.length > 0
-    }
+    const EC = browser.ExpectedConditions
+    const condition = EC.visibilityOf($$('.weather-info img').first())
     return browser.wait(condition, timeout)
   }
 
