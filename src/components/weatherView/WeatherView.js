@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import React, { useState, useEffect, useCallback } from 'react'
 import PropTypes from 'prop-types'
 import { withHeader } from '../common/Header'
 import { WeatherInfo } from './WeatherInfo'
@@ -24,69 +24,50 @@ const PLACEHOLDER = {
 
 const WeatherInfoWithLoader = withLoader(WeatherInfo)
 
-export class WeatherView extends Component {
+const WeatherView = ({
+  locations,
+  removeLocation,
+  showErrorMessage
+}) => {
+  const [weatherInfos, setWeatherInfos] = useState([])
+  const [busy, setBusy] = useState(false)
 
-  constructor(props) {
-    super(props)
-    this.state = {
-      weatherInfos: [],
-      busy: false
-    }
-  }
-
-  componentDidMount() {
-    log.info(`[WeatherView#componentDidMount]`)
-    this.getWeatherInfos()
-  }
-
-  componentDidUpdate(prevProps) {
-    log.info(`[WeatherView#componentDidUpdate]`)
-    if (this.props.locations.length !== prevProps.locations.length) {
-      this.getWeatherInfos()
-    }
-  }
-
-  componentDidCatch(error, info) {
-    log.error(`[WeatherView#componentDidCatch] error: ${error}; info: ${info}`)
-  }
-
-  async getWeatherInfos() {
+  const getWeatherInfos = useCallback(async () => {
     try {
       log.info(`[WeatherView#getWeatherInfos]`)
-      const locationIds = this.props.locations.map(location => location.id)
-      const placeHolders = this.props.locations.map(location => ({ id: location.id }))
-      this.setState({
-        weatherInfos: placeHolders,
-        busy: true
-      })
+      const locationIds = locations.map(location => location.id)
+      const placeHolders = locations.map(location => ({ id: location.id }))
+      setWeatherInfos(placeHolders)
+      setBusy(true)
       const weatherInfos = await getWeatherInfo(locationIds)
-      this.setState({ weatherInfos })
+      setWeatherInfos(weatherInfos)
     } catch (error) {
       log.error(`[WeatherView#getWeatherInfos] ${error.message}`)
-      this.setState({ weatherInfos: [] })
-      this.props.showErrorMessage(error.message)
+      setWeatherInfos([])
+      showErrorMessage(error.message)
     } finally {
       setTimeout(() => {
-        this.setState({ busy: false })
+        setBusy(false)
       }, 250)
     }
-  }
+  }, [locations, showErrorMessage])
 
-  onRefresh = () => {
+  useEffect(() => { getWeatherInfos() }, [getWeatherInfos])
+
+  const onRefresh = () => {
     log.info(`[WeatherView#onRefresh]`)
-    this.getWeatherInfos()
+    getWeatherInfos()
   }
 
-  renderRightContent() {
+  const renderRightContent = () => {
     return (
       <div className="pull-right">
         {
-          this.state.busy &&
-          <img className="busy-indicator" alt="busy indicator" src="/spinner.gif" />
+          busy && <img className="busy-indicator" alt="busy indicator" src="/spinner.gif" />
         }
         <span className="btn btn-xs btn-success" title="Refresh"
-          disabled={this.state.busy}
-          onClick={this.onRefresh}
+          disabled={busy}
+          onClick={onRefresh}
         >
           <i className="fas fa-redo"></i>
         </span>
@@ -94,32 +75,32 @@ export class WeatherView extends Component {
     )
   }
 
-  renderWeatherInfos() {
+  const renderWeatherInfos = () => {
     log.info(`[WeatherView#renderWeatherInfos]`)
-    return this.state.weatherInfos.map((weatherInfo, index) =>
+    return weatherInfos.map((weatherInfo, index) =>
       <WeatherInfoWithLoader
-        isLoading={this.state.busy}
+        isLoading={busy}
         key={index}
-        {...(this.state.busy ? PLACEHOLDER : weatherInfo)}
-        onClose={this.props.removeLocation}
+        {...busy ? PLACEHOLDER : weatherInfo}
+        onClose={removeLocation}
       />
     )
   }
 
-  render() {
-    return <div>
+  return (
+    <div>
       <div className="row">
         <div className="row-margins">
-          {this.renderRightContent()}
+          {renderRightContent()}
         </div>
       </div>
       <div className="row">
         <div className="weatherView">
-          {this.renderWeatherInfos()}
+          {renderWeatherInfos()}
         </div>
       </div>
     </div>
-  }
+  )
 }
 
 WeatherView.propTypes = {

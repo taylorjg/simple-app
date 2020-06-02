@@ -10,7 +10,6 @@ export const getWeatherInfo = async ids => {
         ids: ids.join(',')
       }
     }
-    // const response = await axios.get(`/api/weatherInfo/${ids.join(',')}`)
     const response = await axios.get('/api/weatherInfo', config)
     const result = response.data
     if (result.success) {

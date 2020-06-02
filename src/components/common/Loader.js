@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import ContentLoader from 'react-content-loader'
-import * as log from 'loglevel'
+import log from 'loglevel'
 import * as R from 'ramda'
 
 const MAX_DEPTH = 2

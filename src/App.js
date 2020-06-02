@@ -1,11 +1,10 @@
-import React, { Component } from 'react'
+import React, { useState } from 'react'
 import { BrowserRouter as Router, Route } from 'react-router-dom'
 import { WeatherViewWithHeader } from './components/weatherView/WeatherView'
 import { PreferencesViewWithHeader } from './components/preferencesView/PreferencesView'
 import { DEFAULT_LOCATIONS } from './defaultLocations'
 import { version } from '../package.json'
-import * as R from 'ramda'
-import * as log from 'loglevel'
+import log from 'loglevel'
 import './App.css'
 
 // https://github.com/ReactTraining/react-router/issues/4105#issuecomment-289195202
@@ -13,59 +12,45 @@ const RouteWithProps = ({ component, ...rest }) =>
   <Route {...rest} render={props =>
     React.createElement(component, { ...props, ...rest })} />
 
-class App extends Component {
+const App = () => {
+  const [locations, setLocations] = useState(DEFAULT_LOCATIONS)
 
-  constructor(props) {
-    super(props)
-    this.state = {
-      locations: DEFAULT_LOCATIONS
-    }
-  }
-
-  addLocation = location => {
+  const addLocation = location => {
     log.info(`[App#addLocation] location: ${JSON.stringify(location)}`)
-    const newLocations = R.append(location, this.state.locations)
-    this.setState({
-      locations: newLocations
-    })
+    setLocations([...locations, location])
   }
 
-  removeLocation = id => {
+  const removeLocation = id => {
     log.info(`[App#removeLocation] id: ${id}`)
-    const newLocations = R.reject(location => location.id === id, this.state.locations)
-    this.setState({
-      locations: newLocations
-    })
+    setLocations(locations.filter(location => location.id !== id))
   }
 
-  render() {
-    return (
-      <div className="container">
-        <div className="row">
-          <div className="row-margins">
-            <span className="version pull-right">version: {version}</span>
-          </div>
-          <div className="row-margins">
-            <hr />
-          </div>
+  return (
+    <div className="container">
+      <div className="row">
+        <div className="row-margins">
+          <span className="version pull-right">version: {version}</span>
         </div>
-        <Router>
-          <div>
-            <RouteWithProps path={['/', '/index.html']} exact component={WeatherViewWithHeader}
-              locations={this.state.locations}
-              removeLocation={this.removeLocation}
-            />
-            <RouteWithProps path="/preferences" exact component={PreferencesViewWithHeader}
-              locations={this.state.locations}
-              addLocation={this.addLocation}
-              removeLocation={this.removeLocation}
-            />
-            {/* TODO: default not found page ? */}
-          </div>
-        </Router>
+        <div className="row-margins">
+          <hr />
+        </div>
       </div>
-    )
-  }
+      <Router>
+        <div>
+          <RouteWithProps path={['/', '/index.html']} exact component={WeatherViewWithHeader}
+            locations={locations}
+            removeLocation={removeLocation}
+          />
+          <RouteWithProps path="/preferences" exact component={PreferencesViewWithHeader}
+            locations={locations}
+            addLocation={addLocation}
+            removeLocation={removeLocation}
+          />
+          {/* TODO: default not found page ? */}
+        </div>
+      </Router>
+    </div>
+  )
 }
 
 export default App
