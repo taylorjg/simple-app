@@ -58,7 +58,7 @@ export class PreferencesView extends Component {
       matchingLocations: [],
       selectedLocation: null
     })
-    this.cityTypeahead.getInstance().clear()
+    this.cityTypeahead.clear()
   }
 
   onClear = () => {
@@ -68,8 +68,8 @@ export class PreferencesView extends Component {
       matchingLocations: [],
       selectedLocation: null
     })
-    this.countryTypeahead.getInstance().clear()
-    this.cityTypeahead.getInstance().clear()
+    this.countryTypeahead.clear()
+    this.cityTypeahead.clear()
   }
 
   onAdd = e => {

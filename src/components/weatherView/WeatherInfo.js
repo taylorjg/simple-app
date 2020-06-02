@@ -1,6 +1,6 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import sentenceCase from 'sentence-case'
+import { sentenceCase } from 'sentence-case'
 import './WeatherInfo.css'
 
 export const WeatherInfo = props =>
