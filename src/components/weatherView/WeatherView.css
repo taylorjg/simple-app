@@ -2,11 +2,3 @@
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
 }
-
-.refresh-button {
-  color: green;
-}
-
-.busy-indicator {
-  margin-right: 5px;
-}

@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react'
 import PropTypes from 'prop-types'
+import { IconButton } from '@chakra-ui/core'
 import { WeatherInfo } from './WeatherInfo'
 import { withLoader } from '../common/Loader'
 import { getWeatherInfo } from '../../services/weatherInfo'
@@ -61,15 +62,15 @@ export const WeatherView = ({
   const renderRightContent = () => {
     return (
       <div className="pull-right">
-        {
-          busy && <img className="busy-indicator" alt="busy indicator" src="/spinner.gif" />
-        }
-        <span className="btn btn-xs btn-success" title="Refresh"
-          disabled={busy}
+        <IconButton
+          icon="repeat"
+          size="lg"
+          aria-label="Refresh"
+          variantColor="green"
+          isDisabled={busy}
+          isLoading={busy}
           onClick={onRefresh}
-        >
-          <i className="fas fa-redo"></i>
-        </span>
+        />
       </div>
     )
   }
