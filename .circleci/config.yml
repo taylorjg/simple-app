@@ -16,6 +16,7 @@ jobs:
           key: v1-dependencies-{{ checksum "package.json" }}
       - run: npm test
       - run: npm run build
+      - run: npm run copy-to-server-public
       - run:
           command: PORT=3000 OPEN_WEATHER_API_KEY=$OPEN_WEATHER_API_KEY node server
           background: true
