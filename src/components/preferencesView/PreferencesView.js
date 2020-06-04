@@ -1,11 +1,10 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
+import { CountryPicker } from './CountryPicker'
+import { LocationPicker } from './LocationPicker'
 import { Location } from './Location'
-import { search } from '../../services/locations'
-import { Typeahead, AsyncTypeahead } from 'react-bootstrap-typeahead'
-import { countries, defaultCountry } from './countries'
+import { defaultCountry } from './countries'
 import log from 'loglevel'
-import 'react-bootstrap-typeahead/css/Typeahead.css'
 import './PreferencesView.css'
 
 export class PreferencesView extends Component {
@@ -13,68 +12,43 @@ export class PreferencesView extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      busy: false,
-      matchingCountries: [],
       selectedCountry: defaultCountry,
-      matchingLocations: [],
       selectedLocation: null
     }
   }
 
-  componentDidCatch(error, info) {
-    log.error(`[PreferencesView#componentDidCatch] error: ${error}; info: ${info}`)
-  }
-
-  onCountryChange = async selectedItems => {
-    log.info(`[PreferencesView#onCountryChange] selectedItems: ${JSON.stringify(selectedItems)}`)
+  onChangeCountry = async selectedItems => {
+    log.info(`[PreferencesView#onChangeCountry] selectedItems: ${JSON.stringify(selectedItems)}`)
     const selectedCountry = selectedItems[0]
     this.setState({ selectedCountry })
   }
 
-  onCitySearch = async input => {
-    try {
-      log.info(`[PreferencesView#onCitySearch] input: ${input}`)
-      this.setState({ busy: true })
-      const matchingLocations = await search(input, this.state.selectedCountry.code)
-      this.setState({ matchingLocations })
-    } catch (error) {
-      log.error(`[PreferencesView#onCitySearch] ${error.message}`)
-      this.setState({ matchingLocations: [] })
-      this.props.onShowErrorMessage(error.message)
-    } finally {
-      this.setState({ busy: false })
-    }
-  }
-
-  onCityChange = selectedItems => {
-    log.info(`[PreferencesView#onCityChange] selectedItems: ${JSON.stringify(selectedItems)}`)
+  onChangeLocation = selectedItems => {
+    log.info(`[PreferencesView#onChangeLocation] selectedItems: ${JSON.stringify(selectedItems)}`)
     const selectedLocation = selectedItems[0]
     this.setState({ selectedLocation })
   }
 
-  clearCity = () => {
+  clearLocation = () => {
     this.setState({
-      matchingLocations: [],
       selectedLocation: null
     })
-    this.cityTypeahead.clear()
+    // this.locationTypeahead.clear()
   }
 
   onClear = () => {
     this.setState({
-      matchingCountries: [],
       selectedCountry: null,
-      matchingLocations: [],
       selectedLocation: null
     })
-    this.countryTypeahead.clear()
-    this.cityTypeahead.clear()
+    // this.countryTypeahead.clear()
+    // this.locationTypeahead.clear()
   }
 
   onAdd = e => {
     log.info(`[PreferencesView#onAdd] selectedLocation: ${JSON.stringify(this.state.selectedLocation)}`)
     e.preventDefault()
-    this.clearCity()
+    this.clearLocation()
     const existingLocation =
       this.props.locations.find(location =>
         location.id === this.state.selectedLocation.id)
@@ -105,31 +79,11 @@ export class PreferencesView extends Component {
       <form>
         <div className="form-group form-group-sm">
           <label htmlFor="country">Search for a country:</label>
-          <Typeahead
-            id="country-typeahead"
-            ref={countryTypeahead => this.countryTypeahead = countryTypeahead}
-            inputProps={{ id: 'country' }}
-            size="sm"
-            onChange={this.onCountryChange}
-            labelKey='name'
-            options={countries}
-            defaultSelected={[defaultCountry]}
-          />
+          <CountryPicker id="country" onChangeCountry={this.onChangeCountry} />
         </div>
         <div className="form-group form-group-sm">
-          <label htmlFor="city">Search for a city:</label>
-          <AsyncTypeahead
-            id="city-typeahead"
-            ref={cityTypeahead => this.cityTypeahead = cityTypeahead}
-            inputProps={{ id: 'city' }}
-            size="sm"
-            disabled={!this.state.selectedCountry}
-            isLoading={this.state.busy}
-            onSearch={this.onCitySearch}
-            onChange={this.onCityChange}
-            labelKey='city'
-            options={this.state.matchingLocations}
-          />
+          <label htmlFor="location">Search for a location:</label>
+          <LocationPicker id="location" country={this.state.selectedCountry} onChangeLocation={this.onChangeLocation} />
         </div>
         <button type="submit" className="btn btn-xs btn-primary"
           disabled={!this.state.selectedLocation}
