@@ -1,11 +1,20 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
-import './index.css'
+import { ThemeProvider, ColorModeProvider } from '@chakra-ui/core'
 import App from './App'
 import * as serviceWorker from './serviceWorker'
-import * as log from 'loglevel'
+import log from 'loglevel'
+import './index.css'
 
-ReactDOM.render(<App />, document.getElementById('root'))
+const ThemedApp = () => (
+    <ThemeProvider>
+        <ColorModeProvider>
+            <App />
+        </ColorModeProvider>
+    </ThemeProvider>
+)
+
+ReactDOM.render(<ThemedApp />, document.getElementById('root'))
 
 // If you want your app to work offline and load faster, you can change
 // unregister() to register() below. Note this comes with some pitfalls.

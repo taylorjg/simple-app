@@ -4,30 +4,27 @@ import { NavigationLinks } from './NavigationLinks'
 import { ErrorPanel } from './ErrorPanel'
 import './Header.css'
 
-export class Header extends Component {
-
-  render() {
-    return (
-      <div>
-        <div className="row">
-          <div className="row-margins">
-            <NavigationLinks />
-          </div>
-        </div>
-        <div className="row">
-          <div className="row-margins">
-            <ErrorPanel errorMessage={this.props.errorMessage}
-              onClose={this.props.clearErrorMessage} />
-          </div>
+export const Header = ({ errorMessage, onClearErrorMessage }) => {
+  return (
+    <div>
+      <div className="row">
+        <div className="row-margins">
+          <NavigationLinks />
         </div>
       </div>
-    )
-  }
+      <div className="row">
+        <div className="row-margins">
+          <ErrorPanel errorMessage={errorMessage}
+            onClose={onClearErrorMessage} />
+        </div>
+      </div>
+    </div>
+  )
 }
 
 Header.propTypes = {
   errorMessage: PropTypes.string,
-  clearErrorMessage: PropTypes.func.isRequired
+  onClearErrorMessage: PropTypes.func.isRequired
 }
 
 export const withHeader = ViewComponent => {
@@ -41,11 +38,11 @@ export const withHeader = ViewComponent => {
       }
     }
 
-    showErrorMessage = errorMessage => {
+    onShowErrorMessage = errorMessage => {
       this.setState({ errorMessage })
     }
 
-    clearErrorMessage = () => {
+    onClearErrorMessage = () => {
       this.setState({ errorMessage: '' })
     }
 
@@ -54,11 +51,11 @@ export const withHeader = ViewComponent => {
         <div>
           <Header
             errorMessage={this.state.errorMessage}
-            clearErrorMessage={this.clearErrorMessage}
+            onClearErrorMessage={this.onClearErrorMessage}
           />
           <ViewComponent
-            showErrorMessage={this.showErrorMessage}
-            clearErrorMessage={this.clearErrorMessage}
+            onShowErrorMessage={this.onShowErrorMessage}
+            onClearErrorMessage={this.onClearErrorMessage}
             {...this.props}
           />
         </div>

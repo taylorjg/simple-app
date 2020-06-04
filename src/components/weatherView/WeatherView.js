@@ -26,8 +26,8 @@ const WeatherInfoWithLoader = withLoader(WeatherInfo)
 
 const WeatherView = ({
   locations,
-  removeLocation,
-  showErrorMessage
+  onRemoveLocation,
+  onShowErrorMessage
 }) => {
   const [weatherInfos, setWeatherInfos] = useState([])
   const [busy, setBusy] = useState(false)
@@ -44,13 +44,13 @@ const WeatherView = ({
     } catch (error) {
       log.error(`[WeatherView#getWeatherInfos] ${error.message}`)
       setWeatherInfos([])
-      showErrorMessage(error.message)
+      onShowErrorMessage(error.message)
     } finally {
       setTimeout(() => {
         setBusy(false)
       }, 250)
     }
-  }, [locations, showErrorMessage])
+  }, [locations, onShowErrorMessage])
 
   useEffect(() => { getWeatherInfos() }, [getWeatherInfos])
 
@@ -82,7 +82,7 @@ const WeatherView = ({
         isLoading={busy}
         key={index}
         {...busy ? PLACEHOLDER : weatherInfo}
-        onClose={removeLocation}
+        onClose={onRemoveLocation}
       />
     )
   }
@@ -104,10 +104,15 @@ const WeatherView = ({
 }
 
 WeatherView.propTypes = {
-  showErrorMessage: PropTypes.func.isRequired,
-  clearErrorMessage: PropTypes.func.isRequired,
-  locations: PropTypes.arrayOf(PropTypes.object).isRequired,
-  removeLocation: PropTypes.func.isRequired
+  locations: PropTypes.arrayOf(PropTypes.shape({
+    id: PropTypes.number.isRequired,
+    location: PropTypes.string.isRequired,
+    city: PropTypes.string.isRequired,
+    country: PropTypes.string.isRequired
+  })).isRequired,
+  onRemoveLocation: PropTypes.func.isRequired,
+  onShowErrorMessage: PropTypes.func.isRequired,
+  onClearErrorMessage: PropTypes.func.isRequired
 }
 
 export const WeatherViewWithHeader = withHeader(WeatherView)

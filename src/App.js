@@ -15,13 +15,13 @@ const RouteWithProps = ({ component, ...rest }) =>
 const App = () => {
   const [locations, setLocations] = useState(DEFAULT_LOCATIONS)
 
-  const addLocation = location => {
-    log.info(`[App#addLocation] location: ${JSON.stringify(location)}`)
+  const onAddLocation = location => {
+    log.info(`[App#onAddLocation] location: ${JSON.stringify(location)}`)
     setLocations([...locations, location])
   }
 
-  const removeLocation = id => {
-    log.info(`[App#removeLocation] id: ${id}`)
+  const onRemoveLocation = id => {
+    log.info(`[App#onRemoveLocation] id: ${id}`)
     setLocations(locations.filter(location => location.id !== id))
   }
 
@@ -39,12 +39,12 @@ const App = () => {
         <div>
           <RouteWithProps path={['/', '/index.html']} exact component={WeatherViewWithHeader}
             locations={locations}
-            removeLocation={removeLocation}
+            onRemoveLocation={onRemoveLocation}
           />
           <RouteWithProps path="/preferences" exact component={PreferencesViewWithHeader}
             locations={locations}
-            addLocation={addLocation}
-            removeLocation={removeLocation}
+            onAddLocation={onAddLocation}
+            onRemoveLocation={onRemoveLocation}
           />
           {/* TODO: default not found page ? */}
         </div>

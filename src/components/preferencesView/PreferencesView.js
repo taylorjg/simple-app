@@ -5,7 +5,8 @@ import { Location } from './Location'
 import { search } from '../../services/locations'
 import { Typeahead, AsyncTypeahead } from 'react-bootstrap-typeahead'
 import { countries, defaultCountry } from './countries'
-import * as log from 'loglevel'
+import log from 'loglevel'
+import 'react-bootstrap-typeahead/css/Typeahead.css'
 import './PreferencesView.css'
 
 export class PreferencesView extends Component {
@@ -37,11 +38,11 @@ export class PreferencesView extends Component {
       this.setState({ busy: true })
       const matchingLocations = await search(input, this.state.selectedCountry.code)
       this.setState({ matchingLocations })
-      this.props.clearErrorMessage()
+      this.props.onClearErrorMessage()
     } catch (error) {
       log.error(`[PreferencesView#onCitySearch] ${error.message}`)
       this.setState({ matchingLocations: [] })
-      this.props.showErrorMessage(error.message)
+      this.props.onShowErrorMessage(error.message)
     } finally {
       this.setState({ busy: false })
     }
@@ -80,15 +81,15 @@ export class PreferencesView extends Component {
       this.props.locations.find(location =>
         location.id === this.state.selectedLocation.id)
     if (existingLocation) {
-      this.props.showErrorMessage(`Duplicate location, "${this.state.selectedLocation.location}".`)
+      this.props.onShowErrorMessage(`Duplicate location, "${this.state.selectedLocation.location}".`)
       return
     }
-    this.props.addLocation(this.state.selectedLocation)
+    this.props.onAddLocation(this.state.selectedLocation)
   }
 
   onDelete = id => {
     log.info(`[PreferencesView#onDelete] id: ${id}`)
-    this.props.removeLocation(id)
+    this.props.onRemoveLocation(id)
   }
 
   renderLocations() {
@@ -107,9 +108,10 @@ export class PreferencesView extends Component {
         <div className="form-group form-group-sm">
           <label htmlFor="country">Search for a country:</label>
           <Typeahead
+            id="country-typeahead"
             ref={countryTypeahead => this.countryTypeahead = countryTypeahead}
             inputProps={{ id: 'country' }}
-            bsSize="sm"
+            size="sm"
             onChange={this.onCountryChange}
             labelKey='name'
             options={countries}
@@ -119,9 +121,10 @@ export class PreferencesView extends Component {
         <div className="form-group form-group-sm">
           <label htmlFor="city">Search for a city:</label>
           <AsyncTypeahead
+            id="city-typeahead"
             ref={cityTypeahead => this.cityTypeahead = cityTypeahead}
             inputProps={{ id: 'city' }}
-            bsSize="sm"
+            size="sm"
             disabled={!this.state.selectedCountry}
             isLoading={this.state.busy}
             onSearch={this.onCitySearch}
@@ -157,11 +160,16 @@ export class PreferencesView extends Component {
 }
 
 PreferencesView.propTypes = {
-  showErrorMessage: PropTypes.func.isRequired,
-  clearErrorMessage: PropTypes.func.isRequired,
-  locations: PropTypes.arrayOf(PropTypes.object).isRequired,
-  addLocation: PropTypes.func.isRequired,
-  removeLocation: PropTypes.func.isRequired
+  locations: PropTypes.arrayOf(PropTypes.shape({
+    id: PropTypes.number.isRequired,
+    location: PropTypes.string.isRequired,
+    city: PropTypes.string.isRequired,
+    country: PropTypes.string.isRequired
+  })).isRequired,
+  onAddLocation: PropTypes.func.isRequired,
+  onRemoveLocation: PropTypes.func.isRequired,
+  onShowErrorMessage: PropTypes.func.isRequired,
+  onClearErrorMessage: PropTypes.func.isRequired
 }
 
 export const PreferencesViewWithHeader = withHeader(PreferencesView)

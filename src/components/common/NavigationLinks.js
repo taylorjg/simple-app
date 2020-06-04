@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import React from 'react'
 import { withRouter, Link } from 'react-router-dom'
 import * as R from 'ramda'
 import './NavigationLinks.css'
@@ -15,50 +15,35 @@ const LINKS = [
   }
 ]
 
-class InternalNavigationLinks extends Component {
+const InternalNavigationLinks = ({ match }) => {
 
-  getPath(link) {
-    return Array.isArray(link.path)
+  const getPath = link =>
+    Array.isArray(link.path)
       ? link.path[0]
       : link.path
-  }
 
-  isActive(link) {
-    return Array.isArray(link.path)
-      ? link.path.includes(this.props.match.url)
-      : link.path === this.props.match.url
-  }
+  const isActive = link =>
+    Array.isArray(link.path)
+      ? link.path.includes(match.url)
+      : link.path === match.url
 
-  renderLink(link, index) {
-    return (
-      this.isActive(link)
-        ? <span key={index}>{link.label}</span>
-        : <Link key={index} to={this.getPath(link)}>{link.label}</Link>
-    )
-  }
+  const renderLink = (link, index) =>
+    isActive(link)
+      ? <span key={index}>{link.label}</span>
+      : <Link key={index} to={getPath(link)}>{link.label}</Link>
 
-  renderSeparator(index) {
-    return (
-      <span key={index} className="navigation-links__separator">|</span>
-    )
-  }
+  const renderSeparator = index =>
+    <span key={index} className="navigation-links__separator">|</span>
 
-  renderItem(item, index) {
-    return item
-      ? this.renderLink(item, index)
-      : this.renderSeparator(index)
-  }
+  const renderItem = (item, index) =>
+    item ? renderLink(item, index) : renderSeparator(index)
 
-  render() {
-    return (
-      <div className="navigation-links">
-        {
-          R.intersperse(null, LINKS)
-            .map((item, index) => this.renderItem(item, index))
-        }
-      </div>
-    )
-  }
+  return (
+    <div className="navigation-links">
+      {/* {R.intersperse(null, LINKS).map((item, index) => renderItem(item, index))} */}
+      {R.intersperse(null, LINKS).map(renderItem)}
+    </div>
+  )
 }
 
 export const NavigationLinks = withRouter(InternalNavigationLinks)
