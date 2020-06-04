@@ -15,11 +15,9 @@ jobs:
             - node_modules
           key: v1-dependencies-{{ checksum "package.json" }}
       - run: npm test
+      - run: npm run build
       - run:
-          command: OPEN_WEATHER_API_KEY=$OPEN_WEATHER_API_KEY node server
-          background: true
-      - run:
-          command: npm start
+          command: PORT=3000 OPEN_WEATHER_API_KEY=$OPEN_WEATHER_API_KEY node server
           background: true
       - run: npm run e2e
       - run: killall -QUIT node
