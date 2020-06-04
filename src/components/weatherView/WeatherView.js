@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react'
 import PropTypes from 'prop-types'
-import { withHeader } from '../common/Header'
 import { WeatherInfo } from './WeatherInfo'
 import { withLoader } from '../common/Loader'
 import { getWeatherInfo } from '../../services/weatherInfo'
@@ -24,7 +23,7 @@ const PLACEHOLDER = {
 
 const WeatherInfoWithLoader = withLoader(WeatherInfo)
 
-const WeatherView = ({
+export const WeatherView = ({
   locations,
   onRemoveLocation,
   onShowErrorMessage
@@ -114,5 +113,3 @@ WeatherView.propTypes = {
   onShowErrorMessage: PropTypes.func.isRequired,
   onClearErrorMessage: PropTypes.func.isRequired
 }
-
-export const WeatherViewWithHeader = withHeader(WeatherView)

@@ -40,7 +40,6 @@ const InternalNavigationLinks = ({ match }) => {
 
   return (
     <div className="navigation-links">
-      {/* {R.intersperse(null, LINKS).map((item, index) => renderItem(item, index))} */}
       {R.intersperse(null, LINKS).map(renderItem)}
     </div>
   )

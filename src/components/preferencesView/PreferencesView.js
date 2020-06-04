@@ -1,6 +1,5 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
-import { withHeader } from '../common/Header'
 import { Location } from './Location'
 import { search } from '../../services/locations'
 import { Typeahead, AsyncTypeahead } from 'react-bootstrap-typeahead'
@@ -171,5 +170,3 @@ PreferencesView.propTypes = {
   onShowErrorMessage: PropTypes.func.isRequired,
   onClearErrorMessage: PropTypes.func.isRequired
 }
-
-export const PreferencesViewWithHeader = withHeader(PreferencesView)

@@ -1,16 +1,12 @@
 import React, { useState } from 'react'
 import { BrowserRouter as Router, Route } from 'react-router-dom'
-import { WeatherViewWithHeader } from './components/weatherView/WeatherView'
-import { PreferencesViewWithHeader } from './components/preferencesView/PreferencesView'
+import { Header } from './components/common/Header'
+import { WeatherView } from './components/weatherView/WeatherView'
+import { PreferencesView } from './components/preferencesView/PreferencesView'
 import { DEFAULT_LOCATIONS } from './defaultLocations'
 import { version } from '../package.json'
 import log from 'loglevel'
 import './App.css'
-
-// https://github.com/ReactTraining/react-router/issues/4105#issuecomment-289195202
-const RouteWithProps = ({ component, ...rest }) =>
-  <Route {...rest} render={props =>
-    React.createElement(component, { ...props, ...rest })} />
 
 const App = () => {
   const [locations, setLocations] = useState(DEFAULT_LOCATIONS)
@@ -25,6 +21,14 @@ const App = () => {
     setLocations(locations.filter(location => location.id !== id))
   }
 
+  const onShowErrorMessage = errorMessage => {
+    // this.setState({ errorMessage })
+  }
+
+  const onClearErrorMessage = () => {
+    // this.setState({ errorMessage: '' })
+  }
+
   return (
     <div className="container">
       <div className="row">
@@ -36,18 +40,25 @@ const App = () => {
         </div>
       </div>
       <Router>
-        <div>
-          <RouteWithProps path={['/', '/index.html']} exact component={WeatherViewWithHeader}
+        <Route path={['/', '/index.html']} exact>
+          <Header />
+          <WeatherView
             locations={locations}
             onRemoveLocation={onRemoveLocation}
+            onShowErrorMessage={onShowErrorMessage}
+            onClearErrorMessage={onClearErrorMessage}
           />
-          <RouteWithProps path="/preferences" exact component={PreferencesViewWithHeader}
+        </Route>
+        <Route path="/preferences" exact>
+          <Header />
+          <PreferencesView
             locations={locations}
             onAddLocation={onAddLocation}
             onRemoveLocation={onRemoveLocation}
+            onShowErrorMessage={onShowErrorMessage}
+            onClearErrorMessage={onClearErrorMessage}
           />
-          {/* TODO: default not found page ? */}
-        </div>
+        </Route>
       </Router>
     </div>
   )
