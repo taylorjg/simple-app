@@ -110,6 +110,5 @@ WeatherView.propTypes = {
     country: PropTypes.string.isRequired
   })).isRequired,
   onRemoveLocation: PropTypes.func.isRequired,
-  onShowErrorMessage: PropTypes.func.isRequired,
-  onClearErrorMessage: PropTypes.func.isRequired
+  onShowErrorMessage: PropTypes.func.isRequired
 }

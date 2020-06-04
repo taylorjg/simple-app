@@ -37,7 +37,6 @@ export class PreferencesView extends Component {
       this.setState({ busy: true })
       const matchingLocations = await search(input, this.state.selectedCountry.code)
       this.setState({ matchingLocations })
-      this.props.onClearErrorMessage()
     } catch (error) {
       log.error(`[PreferencesView#onCitySearch] ${error.message}`)
       this.setState({ matchingLocations: [] })
@@ -167,6 +166,5 @@ PreferencesView.propTypes = {
   })).isRequired,
   onAddLocation: PropTypes.func.isRequired,
   onRemoveLocation: PropTypes.func.isRequired,
-  onShowErrorMessage: PropTypes.func.isRequired,
-  onClearErrorMessage: PropTypes.func.isRequired
+  onShowErrorMessage: PropTypes.func.isRequired
 }

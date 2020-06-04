@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 import { BrowserRouter as Router, Route } from 'react-router-dom'
+import { useToast } from '@chakra-ui/core'
 import { Header } from './components/common/Header'
 import { WeatherView } from './components/weatherView/WeatherView'
 import { PreferencesView } from './components/preferencesView/PreferencesView'
@@ -10,6 +11,7 @@ import './App.css'
 
 const App = () => {
   const [locations, setLocations] = useState(DEFAULT_LOCATIONS)
+  const toast = useToast()
 
   const onAddLocation = location => {
     log.info(`[App#onAddLocation] location: ${JSON.stringify(location)}`)
@@ -21,13 +23,8 @@ const App = () => {
     setLocations(locations.filter(location => location.id !== id))
   }
 
-  const onShowErrorMessage = errorMessage => {
-    // this.setState({ errorMessage })
-  }
-
-  const onClearErrorMessage = () => {
-    // this.setState({ errorMessage: '' })
-  }
+  const onShowErrorMessage = errorMessage =>
+    toast({ description: errorMessage, status: 'error' })
 
   return (
     <div className="container">
@@ -46,7 +43,6 @@ const App = () => {
             locations={locations}
             onRemoveLocation={onRemoveLocation}
             onShowErrorMessage={onShowErrorMessage}
-            onClearErrorMessage={onClearErrorMessage}
           />
         </Route>
         <Route path="/preferences" exact>
@@ -56,7 +52,6 @@ const App = () => {
             onAddLocation={onAddLocation}
             onRemoveLocation={onRemoveLocation}
             onShowErrorMessage={onShowErrorMessage}
-            onClearErrorMessage={onClearErrorMessage}
           />
         </Route>
       </Router>
