@@ -1,10 +1,10 @@
-import React, { useState, useEffect, useCallback } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import PropTypes from 'prop-types'
 import { IconButton } from '@chakra-ui/core'
 import { WeatherInfo } from './WeatherInfo'
 import { withLoader } from '../common/Loader'
 import { getWeatherInfo } from '../../services/weatherInfo'
-import * as log from 'loglevel'
+import log from 'loglevel'
 import './WeatherView.css'
 
 const PLACEHOLDER = {
@@ -59,7 +59,7 @@ export const WeatherView = ({
     getWeatherInfos()
   }
 
-  const renderRightContent = () => {
+  const renderControls = () => {
     return (
       <div className="pull-right">
         <IconButton
@@ -91,7 +91,7 @@ export const WeatherView = ({
     <div>
       <div className="row">
         <div className="row-margins">
-          {renderRightContent()}
+          {renderControls()}
         </div>
       </div>
       <div className="row">
@@ -106,9 +106,9 @@ export const WeatherView = ({
 WeatherView.propTypes = {
   locations: PropTypes.arrayOf(PropTypes.shape({
     id: PropTypes.number.isRequired,
-    displayName: PropTypes.string.isRequired,
+    country: PropTypes.string.isRequired,
     city: PropTypes.string.isRequired,
-    country: PropTypes.string.isRequired
+    displayName: PropTypes.string.isRequired
   })).isRequired,
   onRemoveLocation: PropTypes.func.isRequired,
   onShowErrorMessage: PropTypes.func.isRequired
