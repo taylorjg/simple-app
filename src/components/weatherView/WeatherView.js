@@ -106,7 +106,7 @@ export const WeatherView = ({
 WeatherView.propTypes = {
   locations: PropTypes.arrayOf(PropTypes.shape({
     id: PropTypes.number.isRequired,
-    location: PropTypes.string.isRequired,
+    displayName: PropTypes.string.isRequired,
     city: PropTypes.string.isRequired,
     country: PropTypes.string.isRequired
   })).isRequired,

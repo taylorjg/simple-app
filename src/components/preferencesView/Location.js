@@ -4,7 +4,7 @@ import './Location.css'
 
 export const Location = ({ location, onDelete }) =>
   <div className="location-item">
-    <span className="location-item__location">{location.location}</span>
+    <span className="location-item__location">{location.displayName}</span>
     <span className="location-item__delete-button btn btn-xs btn-default"
       title="Delete"
       onClick={() => onDelete(location.id)}
@@ -14,6 +14,11 @@ export const Location = ({ location, onDelete }) =>
   </div>
 
 Location.propTypes = {
-  location: PropTypes.object.isRequired,
+  location: PropTypes.shape({
+    id: PropTypes.number.isRequired,
+    country: PropTypes.string.isRequired,
+    city: PropTypes.string.isRequired,
+    displayName: PropTypes.string.isRequired
+  }).isRequired,
   onDelete: PropTypes.func.isRequired
 }

@@ -7,10 +7,10 @@ export const WeatherInfo = props =>
   <div className="weather-info">
     <span className="close" onClick={() => props.onClose(props.id)}>&times;</span>
     <div className="weather-info__location">
-      {`Weather in ${props.location}`}
+      {`Weather in ${props.displayName}`}
     </div>
     <div className="weather-info__temperature">
-      <img src={props.imageUrl} alt={`Weather in ${props.location}`}></img>
+      <img src={props.imageUrl} alt={`Weather in ${props.displayName}`}></img>
       <span>{props.currentTemp} &deg;C</span>
       <span className="weather-info__temp-range">
         (min: {props.minTemp} &deg;C, max: {props.maxTemp} &deg;C)
@@ -34,7 +34,7 @@ export const WeatherInfo = props =>
 
 WeatherInfo.propTypes = {
   id: PropTypes.number,
-  location: PropTypes.string,
+  displayName: PropTypes.string,
   country: PropTypes.string,
   city: PropTypes.string,
   description: PropTypes.string,

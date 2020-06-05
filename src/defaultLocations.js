@@ -1,26 +1,26 @@
 export const DEFAULT_LOCATIONS = [
   {
     id: 2643123,
-    location: 'Manchester, GB',
+    country: 'GB',
     city: 'Manchester',
-    country: 'GB'
+    displayName: 'Manchester, GB'
   },
   {
     id: 2650225,
-    location: 'Edinburgh, GB',
+    country: 'GB',
     city: 'Edinburgh',
-    country: 'GB'
+    displayName: 'Edinburgh, GB'
   },
   {
     id: 2643743,
-    location: 'London, GB',
+    country: 'GB',
     city: 'London',
-    country: 'GB'
+    displayName: 'London, GB'
   },
   {
     id: 2147714,
-    location: 'Sydney, AU',
+    country: 'AU',
     city: 'Sydney',
-    country: 'AU'
+    displayName: 'Sydney, AU'
   }
 ]

@@ -1,11 +1,14 @@
-import React, { useRef } from 'react'
+import React, { forwardRef } from 'react'
+import PropTypes from 'prop-types'
 import { Typeahead } from 'react-bootstrap-typeahead'
-import { countries, defaultCountry } from './countries'
+import { countries } from './countries'
 import 'react-bootstrap-typeahead/css/Typeahead.css'
 
-export const CountryPicker = ({ id, onChangeCountry }) => {
-  const ref = useRef()
-  
+export const CountryPicker = forwardRef(({
+  id,
+  selectedCountry,
+  onChangeCountry
+}, ref) => {
   return (
     <Typeahead
       id={`${id}-typeahead`}
@@ -15,7 +18,16 @@ export const CountryPicker = ({ id, onChangeCountry }) => {
       onChange={onChangeCountry}
       labelKey='name'
       options={countries}
-      defaultSelected={[defaultCountry]}
+      defaultSelected={selectedCountry ? [selectedCountry] : []}
     />
   )
+})
+
+CountryPicker.propTypes = {
+  id: PropTypes.string.isRequired,
+  selectedCountry: PropTypes.shape({
+    name: PropTypes.string.isRequired,
+    code: PropTypes.string.isRequired
+  }),
+  onChangeCountry: PropTypes.func.isRequired
 }

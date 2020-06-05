@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import React, { Component, createRef } from 'react'
 import PropTypes from 'prop-types'
 import { CountryPicker } from './CountryPicker'
 import { LocationPicker } from './LocationPicker'
@@ -11,9 +11,11 @@ export class PreferencesView extends Component {
 
   constructor(props) {
     super(props)
+    this.countryPickerRef = createRef()
+    this.locationPickerRef = createRef()
     this.state = {
       selectedCountry: defaultCountry,
-      selectedLocation: null
+      selectedLocation: undefined
     }
   }
 
@@ -31,18 +33,18 @@ export class PreferencesView extends Component {
 
   clearLocation = () => {
     this.setState({
-      selectedLocation: null
+      selectedLocation: undefined
     })
-    // this.locationTypeahead.clear()
+    this.locationPickerRef.current.clear()
   }
 
   onClear = () => {
     this.setState({
-      selectedCountry: null,
-      selectedLocation: null
+      selectedCountry: undefined,
+      selectedLocation: undefined
     })
-    // this.countryTypeahead.clear()
-    // this.locationTypeahead.clear()
+    this.countryPickerRef.current.clear()
+    this.locationPickerRef.current.clear()
   }
 
   onAdd = e => {
@@ -53,7 +55,7 @@ export class PreferencesView extends Component {
       this.props.locations.find(location =>
         location.id === this.state.selectedLocation.id)
     if (existingLocation) {
-      this.props.onShowErrorMessage(`Duplicate location, "${this.state.selectedLocation.location}".`)
+      this.props.onShowErrorMessage(`Duplicate location, "${this.state.selectedLocation.displayName}".`)
       return
     }
     this.props.onAddLocation(this.state.selectedLocation)
@@ -79,11 +81,22 @@ export class PreferencesView extends Component {
       <form>
         <div className="form-group form-group-sm">
           <label htmlFor="country">Search for a country:</label>
-          <CountryPicker id="country" onChangeCountry={this.onChangeCountry} />
+          <CountryPicker
+            id="country"
+            ref={this.countryPickerRef}
+            selectedCountry={this.state.selectedCountry}
+            onChangeCountry={this.onChangeCountry}
+          />
         </div>
         <div className="form-group form-group-sm">
           <label htmlFor="location">Search for a location:</label>
-          <LocationPicker id="location" country={this.state.selectedCountry} onChangeLocation={this.onChangeLocation} />
+          <LocationPicker
+            id="location"
+            ref={this.locationPickerRef}
+            selectedCountry={this.state.selectedCountry}
+            selectedLocation={this.state.selectedLocation}
+            onChangeLocation={this.onChangeLocation}
+          />
         </div>
         <button type="submit" className="btn btn-xs btn-primary"
           disabled={!this.state.selectedLocation}
@@ -114,9 +127,9 @@ export class PreferencesView extends Component {
 PreferencesView.propTypes = {
   locations: PropTypes.arrayOf(PropTypes.shape({
     id: PropTypes.number.isRequired,
-    location: PropTypes.string.isRequired,
+    country: PropTypes.string.isRequired,
     city: PropTypes.string.isRequired,
-    country: PropTypes.string.isRequired
+    displayName: PropTypes.string.isRequired
   })).isRequired,
   onAddLocation: PropTypes.func.isRequired,
   onRemoveLocation: PropTypes.func.isRequired,

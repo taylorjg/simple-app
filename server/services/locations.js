@@ -1,5 +1,5 @@
 const R = require('ramda')
-const formatLocation = require('./formatLocation')
+const formatDisplayName = require('./formatDisplayName')
 const cityList = require('./city.list.json')
 
 const locations =
@@ -8,16 +8,15 @@ const locations =
       id: entry.id,
       city: entry.name,
       country: entry.country,
-      location: formatLocation(entry.name, entry.country),
-      lowercaseCity: entry.name.toLowerCase()
+      displayName: formatDisplayName(entry.name, entry.country)
     })),
-    R.uniqBy(entry => entry.location)
+    R.uniqBy(entry => entry.displayName)
   )(cityList)
 
 const search = (input, country) => {
   const lowercaseInput = input.toLowerCase()
   return R.pipe(
-    R.filter(entry => entry.lowercaseCity.includes(lowercaseInput) && entry.country === country),
+    R.filter(entry => entry.city.toLowerCase().includes(lowercaseInput) && entry.country === country),
     R.sort(R.ascend(entry => entry.city)),
     R.take(20)
   )(locations)
