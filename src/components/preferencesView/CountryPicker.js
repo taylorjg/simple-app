@@ -15,7 +15,7 @@ export const CountryPicker = forwardRef(({
       ref={ref}
       inputProps={{ id }}
       size="sm"
-      onChange={onChangeCountry}
+      onChange={selectedItems => onChangeCountry(selectedItems[0])}
       labelKey='name'
       options={countries}
       defaultSelected={selectedCountry ? [selectedCountry] : []}

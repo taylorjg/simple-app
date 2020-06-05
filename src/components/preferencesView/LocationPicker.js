@@ -31,7 +31,7 @@ export const LocationPicker = forwardRef(({
       disabled={!selectedCountry}
       isLoading={loading}
       onSearch={onSearch}
-      onChange={onChangeLocation}
+      onChange={selectedItems => onChangeLocation(selectedItems[0])}
       labelKey='city'
       options={matchingLocations}
       defaultSelected={selectedLocation ? [selectedLocation] : []}
